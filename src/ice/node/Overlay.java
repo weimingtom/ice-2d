@@ -1,7 +1,6 @@
 package ice.node;
 
 
-import android.view.MotionEvent;
 import ice.animation.Animation;
 import ice.graphic.GlRes;
 import ice.graphic.gl_status.ColorController;
@@ -21,21 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class Overlay implements GlRes {
 
-    public interface OnTouchListener {
-        boolean onTouch(Overlay overlay, MotionEvent event);
-    }
-
-    public interface OnHoverListener {
-        void onGetHover(Overlay overlay, MotionEvent event);
-
-        void onMoveHover(Overlay overlay, MotionEvent event);
-
-        void onLoseHover(Overlay overlay, MotionEvent event);
-    }
-
     private static long maxId;
-
-    private static HoverHelper hoverHelper = HoverHelper.getInstance();
 
     public synchronized static long requestId() {
         maxId++;
@@ -154,33 +139,19 @@ public abstract class Overlay implements GlRes {
         return false;
     }
 
-    protected boolean onTouchEvent(MotionEvent event) {
-        return onTouchListener == null
-                ? false
-                : onTouchListener.onTouch(this, event);
-    }
+    protected <T> boolean onEvent(String channel, T event) {
 
-    protected boolean hoverTest() {
-        return onHoverListener != null && visible;
-    }
+        if (eventListeners == null)
+            return false;
 
-    protected void onGetHover(MotionEvent event) {
-        if (onHoverListener != null)
-            onHoverListener.onGetHover(this, event);
-    }
+        for (EventListener listener : eventListeners) {
 
-    protected void onMoveHover(MotionEvent event) {
-        if (onHoverListener != null)
-            onHoverListener.onMoveHover(this, event);
-    }
+            if (listener.getChannel().equals(channel))
+                listener.onEvent(this, event);
 
-    protected void onLoseHover(MotionEvent event) {
-        if (onHoverListener != null)
-            onHoverListener.onLoseHover(this, event);
-    }
+        }
 
-    protected boolean onHoverEvent(MotionEvent event) {
-        return hoverHelper.onHoverEvent(this, event);
+        return false;
     }
 
     public void setPos(float posX, float posY) {
@@ -230,14 +201,6 @@ public abstract class Overlay implements GlRes {
     @Override
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
-    }
-
-    public void setOnTouchListener(OnTouchListener onTouchListener) {
-        this.onTouchListener = onTouchListener;
-    }
-
-    public void setOnHoverListener(OnHoverListener onHoverListener) {
-        this.onHoverListener = onHoverListener;
     }
 
     public Point3F getAbsolutePos() {
@@ -301,14 +264,31 @@ public abstract class Overlay implements GlRes {
         return parent;
     }
 
+    public void addEventListener(EventListener listener) {
+
+        if (eventListeners == null) {
+            synchronized (this) {
+                if (eventListeners == null)
+                    eventListeners = new ArrayList<EventListener>(3);
+            }
+        }
+
+        eventListeners.add(listener);
+    }
+
+    public boolean removeEventListener(EventListener listener) {
+        return (eventListeners == null)
+                ? false
+                : eventListeners.remove(listener);
+    }
+
     private volatile Animation animation;
 
     private volatile List<GlStatusControllerEvent> controllerEvents;
 
     protected List<GlStatusController> statusControllers;
 
-    private OnTouchListener onTouchListener;
-    private OnHoverListener onHoverListener;
+    private List<EventListener> eventListeners;
 
     private boolean visible;
 

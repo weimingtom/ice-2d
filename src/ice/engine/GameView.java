@@ -3,6 +3,7 @@ package ice.engine;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import ice.node.EventChannel;
 import ice.node.Overlay;
 import ice.node.OverlayRoot;
 
@@ -52,20 +53,7 @@ public abstract class GameView extends GLSurfaceView implements AppView {
         if (renderer != null) {
             OverlayRoot overlayRoot = renderer.getOverlayRoot();
 
-            overlayRoot.dispatchTouch(event);
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean onHoverEvent(MotionEvent event) {
-        event.setLocation(event.getX(), EngineContext.getAppHeight() - event.getY());
-
-        if (renderer != null) {
-            OverlayRoot overlayRoot = renderer.getOverlayRoot();
-
-            overlayRoot.dispatchHover(event);
+            overlayRoot.dispatchEvent(EventChannel.TOUCH_CHANNEL, event);
         }
 
         return true;

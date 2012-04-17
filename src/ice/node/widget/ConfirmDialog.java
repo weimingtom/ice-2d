@@ -1,7 +1,6 @@
 package ice.node.widget;
 
 import android.graphics.Color;
-import android.view.MotionEvent;
 import ice.engine.EngineContext;
 import ice.engine.Scene;
 
@@ -23,6 +22,8 @@ public abstract class ConfirmDialog extends Scene {
         );
 
         addChild(colorOverlay);
+
+
     }
 
     public ButtonOverlay getConfirmButton() {
@@ -34,10 +35,10 @@ public abstract class ConfirmDialog extends Scene {
     }
 
     @Override
-    protected boolean onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
+    protected <T> boolean onEvent(String channel, T event) {
+        super.onEvent(channel, event);
 
-        return true;  //禁止越过此dialog 操作其他控件
+        return true;    //禁止越过此dialog 操作其他控件
     }
 
     protected ButtonOverlay confirmButton;

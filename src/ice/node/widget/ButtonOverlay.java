@@ -3,6 +3,8 @@ package ice.node.widget;
 import android.graphics.Bitmap;
 import android.view.MotionEvent;
 import ice.audio.AudioAgent;
+import ice.node.EventChannel;
+import ice.node.EventListener;
 import ice.node.Overlay;
 import ice.res.Res;
 
@@ -85,7 +87,7 @@ public class ButtonOverlay extends BitmapOverlay {
 
         touchAble = true;
 
-        setOnTouchListener(new ClickHandler());
+        addEventListener(new ClickHandler());
     }
 
     protected void onClick() {
@@ -171,10 +173,10 @@ public class ButtonOverlay extends BitmapOverlay {
     private State currentState;
     protected List<State> states;
 
-    public class ClickHandler implements OnTouchListener {
+    public class ClickHandler implements EventListener<MotionEvent> {
 
         @Override
-        public boolean onTouch(Overlay overlay, MotionEvent event) {
+        public boolean onEvent(Overlay overlay, MotionEvent event) {
             if (!isVisible() || !touchAble) return false;
 
             int action = event.getAction();
@@ -219,6 +221,11 @@ public class ButtonOverlay extends BitmapOverlay {
             }
 
             return hitTest;
+        }
+
+        @Override
+        public String getChannel() {
+            return EventChannel.TOUCH_CHANNEL;
         }
 
         private boolean hitTest;

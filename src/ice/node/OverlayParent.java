@@ -1,7 +1,5 @@
 package ice.node;
 
-import android.view.MotionEvent;
-
 import javax.microedition.khronos.opengles.GL11;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -122,32 +120,14 @@ public class OverlayParent<T extends Overlay> extends Overlay {
     }
 
     @Override
-    protected boolean onTouchEvent(MotionEvent event) {
+    protected <T> boolean onEvent(String channel, T event) {
 
         for (int index = size() - 1; index >= 0; index--) {
-            if (get(index).onTouchEvent(event))
+            if (get(index).onEvent(channel, event))
                 return true;
         }
 
-        return super.onTouchEvent(event);
-    }
-
-    @Override
-    protected boolean hoverTest() {
-        return isVisible();
-    }
-
-    @Override
-    protected boolean onHoverEvent(MotionEvent event) {
-        if (!hoverTest())
-            return false;
-
-        for (int index = size() - 1; index >= 0; index--) {
-            if (get(index).onHoverEvent(event))
-                return true;
-        }
-
-        return super.onHoverEvent(event);
+        return super.onEvent(channel, event);
     }
 
     public Iterator<T> iterator() {

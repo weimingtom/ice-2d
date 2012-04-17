@@ -1,6 +1,8 @@
 package ice.practical;
 
 import android.view.MotionEvent;
+import ice.node.EventChannel;
+import ice.node.EventListener;
 import ice.node.Overlay;
 
 /**
@@ -9,10 +11,10 @@ import ice.node.Overlay;
  * Date: 12-2-3
  * Time: 下午3:49
  */
-public class GoAfterTouchListener implements Overlay.OnTouchListener {
+public class GoAfterTouchListener implements EventListener<MotionEvent> {
 
     @Override
-    public boolean onTouch(Overlay overlay, MotionEvent event) {
+    public boolean onEvent(Overlay overlay, MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
 
@@ -31,6 +33,11 @@ public class GoAfterTouchListener implements Overlay.OnTouchListener {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public String getChannel() {
+        return EventChannel.TOUCH_CHANNEL;
     }
 
     private int lastX;
