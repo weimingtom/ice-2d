@@ -146,8 +146,13 @@ public abstract class Overlay implements GlRes {
 
         for (EventListener listener : eventListeners) {
 
-            if (listener.getChannel().equals(channel))
-                listener.onEvent(this, event);
+            if (listener.getChannel().equals(channel)) {
+                boolean breakDispatch = listener.onEvent(this, event);
+
+                if (breakDispatch)
+                    break;
+
+            }
 
         }
 

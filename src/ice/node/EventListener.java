@@ -7,6 +7,13 @@ package ice.node;
  */
 public interface EventListener<T> extends EventChannel {
 
+    /**
+     * handle event.
+     *
+     * @param overlay
+     * @param event
+     * @return break dispatch true else false
+     */
     boolean onEvent(Overlay overlay, T event);
 
 }
