@@ -1,5 +1,7 @@
 package ice.model.vertex;
 
+import static javax.microedition.khronos.opengles.GL10.GL_TRIANGLES;
+
 /**
  * User: jason
  * Date: 12-4-6
@@ -8,6 +10,8 @@ package ice.model.vertex;
 public abstract class Rect implements VertexData {
     public static final byte[] CCW_INDICES;
     public static final byte[] CW_INDICES;
+
+    private static int sharedMode = GL_TRIANGLES;
 
     static {
         CCW_INDICES = new byte[]{
@@ -21,10 +25,21 @@ public abstract class Rect implements VertexData {
         };
     }
 
+
+    public static int getSharedMode() {
+        return sharedMode;
+    }
+
+    public static void setSharedMode(int sharedMode) {
+        Rect.sharedMode = sharedMode;
+    }
+
     protected Rect(float width, float height, boolean ccw) {
         this.ccw = ccw;
 
         buildVertexData(width, height, 0, 1, 0, 1);
+
+        mode = sharedMode;
     }
 
     public final void setBounds(float width, float height) {
@@ -73,6 +88,16 @@ public abstract class Rect implements VertexData {
     protected abstract void onSetBounds(float width, float height);
 
     protected abstract void onsetTextureCoord(float uLeft, float uRight, float vTop, float vBottom);
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    protected int mode;
 
     protected boolean ccw;
     protected float width, height;

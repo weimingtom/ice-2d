@@ -18,15 +18,6 @@ import static javax.microedition.khronos.opengles.GL11.*;
  * Time: 下午12:04
  */
 public class VboRect extends Rect implements GlRes {
-    private static int sharedMode = GL_TRIANGLES;
-
-    public static int getSharedMode() {
-        return sharedMode;
-    }
-
-    public static void setSharedMode(int sharedMode) {
-        VboRect.sharedMode = sharedMode;
-    }
 
     public VboRect(float width, float height) {
         this(width, height, true);
@@ -34,8 +25,6 @@ public class VboRect extends Rect implements GlRes {
 
     public VboRect(float width, float height, boolean ccw) {
         super(width, height, ccw);
-
-        mode = sharedMode;
     }
 
     @Override
@@ -162,16 +151,6 @@ public class VboRect extends Rect implements GlRes {
         FloatBuffer floatBuffer = vertexBuffer.asFloatBuffer();
         floatBuffer.put(sixPoints);
     }
-
-    public int getMode() {
-        return mode;
-    }
-
-    public void setMode(int mode) {
-        this.mode = mode;
-    }
-
-    private int mode;
 
     private boolean dataChanged;
     private int[] vboIds;
