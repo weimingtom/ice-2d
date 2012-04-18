@@ -131,7 +131,7 @@ public abstract class Texture implements GlStatusController, GlRes {
          */
         bindTextureParams(gl, params);
 
-        onLoadTextureData();
+        onLoadTextureData(gl);
     }
 
     @Override
@@ -161,7 +161,7 @@ public abstract class Texture implements GlStatusController, GlRes {
         gl.glDeleteTextures(buffer.length, buffer, 0);
     }
 
-    protected abstract void onLoadTextureData();
+    protected abstract void onLoadTextureData(GL11 gl);
 
     private void bindTextureParams(GL11 gl, Params params) {
         for (Map.Entry<Integer, Integer> entry : params.getParamMap().entrySet()) {

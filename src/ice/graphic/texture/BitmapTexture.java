@@ -43,7 +43,7 @@ public class BitmapTexture extends Texture {
 
         if (reload) {
             reload = false;
-            onLoadTextureData();
+            onLoadTextureData(gl);
         }
 
         if (subProvider != null) {
@@ -54,7 +54,7 @@ public class BitmapTexture extends Texture {
     }
 
     @Override
-    protected void onLoadTextureData() {
+    protected void onLoadTextureData(GL11 gl) {
 
         if (!Texture.isNpotSupported()) {
             if (!powerOfTwoTest(bitmap.getWidth(), bitmap.getHeight())) {
