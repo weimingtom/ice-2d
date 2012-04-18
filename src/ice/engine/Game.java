@@ -241,6 +241,11 @@ public abstract class Game extends Activity implements App {
             nextProvider.onCreate();
         }
 
+        if (nextProvider.isEntry()) {
+            providerStack.clear();
+            providerStack.push(nextProvider.getClass());
+        }
+
         topProvider.onPause();
         nextProvider.onResume();
         topProvider = nextProvider;
