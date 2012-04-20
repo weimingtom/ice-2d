@@ -48,8 +48,6 @@ public abstract class GameView extends GLSurfaceView implements AppView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        event.setLocation(event.getX(), EngineContext.getAppHeight() - event.getY());
-
         if (renderer != null) {
             OverlayRoot overlayRoot = renderer.getOverlayRoot();
 
@@ -66,5 +64,6 @@ public abstract class GameView extends GLSurfaceView implements AppView {
         renderer.getOverlayRoot().onEGLContextLost();
     }
 
+    private MotionEvent touchEvent;
     private GlRenderer renderer;
 }

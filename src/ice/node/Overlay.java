@@ -150,7 +150,7 @@ public abstract class Overlay implements GlRes {
                 boolean breakDispatch = listener.onEvent(this, event);
 
                 if (breakDispatch)
-                    break;
+                    return true;
 
             }
 

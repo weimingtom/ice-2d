@@ -2,6 +2,7 @@ package ice.graphic.texture;
 
 import android.graphics.Bitmap;
 import android.opengl.GLUtils;
+import android.util.Log;
 import ice.res.Res;
 
 import javax.microedition.khronos.opengles.GL11;
@@ -15,6 +16,7 @@ import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
  * Time: 下午3:46
  */
 public class BitmapTexture extends Texture {
+
     public static final String TAG = BitmapTexture.class.getSimpleName();
 
     public BitmapTexture(int bitmapId) {
@@ -93,6 +95,13 @@ public class BitmapTexture extends Texture {
 
     public void postSubData(int xoffset, int yoffset, Bitmap subPixel) {
         //TODO Warning !   subProvider 的这种处理可能导致按钮的状态不正常
+        if (this.subProvider != null) {
+
+            Log.w(TAG, "postSubData ignored ! ");
+            return;
+        }
+
+
         this.xOffset = xoffset;
         this.yOffset = yoffset;
         this.subProvider = subPixel;
