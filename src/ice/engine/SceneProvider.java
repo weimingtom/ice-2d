@@ -2,7 +2,7 @@ package ice.engine;
 
 import android.util.Log;
 
-public abstract class SceneProvider {
+public abstract class SceneProvider<T extends Scene> {
 
     protected SceneProvider() {
         tag = getClass().getSimpleName();
@@ -14,7 +14,7 @@ public abstract class SceneProvider {
         Log.i(tag, "onCreate");
     }
 
-    protected abstract Scene onCreateScene();
+    protected abstract T onCreateScene();
 
     protected void onResume() {
         getScene().onResume();
@@ -35,7 +35,7 @@ public abstract class SceneProvider {
         this.intentMsg = msg;
     }
 
-    public Scene getScene() {
+    public T getScene() {
         return scene;
     }
 
@@ -53,5 +53,5 @@ public abstract class SceneProvider {
 
     protected Object intentMsg;
     private final String tag;
-    protected Scene scene;
+    protected T scene;
 }

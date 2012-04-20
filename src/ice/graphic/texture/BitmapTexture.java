@@ -101,10 +101,9 @@ public class BitmapTexture extends Texture {
             return;
         }
 
-
+        this.subProvider = subPixel;
         this.xOffset = xoffset;
         this.yOffset = yoffset;
-        this.subProvider = subPixel;
     }
 
     private int xOffset, yOffset;
