@@ -1,6 +1,7 @@
 package ice.practical;
 
 import android.view.MotionEvent;
+import ice.engine.EngineContext;
 import ice.node.EventChannel;
 import ice.node.EventListener;
 import ice.node.Overlay;
@@ -21,6 +22,8 @@ public class GoAfterTouchListener implements EventListener<MotionEvent> {
         if (!overlay.hitTest(x, y))
             return false;
 
+        y = EngineContext.getAppHeight() - y;
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 lastX = x;
@@ -30,9 +33,12 @@ public class GoAfterTouchListener implements EventListener<MotionEvent> {
                 overlay.setPos(overlay.getPosX() + x - lastX, overlay.getPosY() + y - lastY);
                 lastX = x;
                 lastY = y;
-                return true;
+                break;
+            case MotionEvent.ACTION_UP:
+                return false;
         }
-        return false;
+
+        return true;
     }
 
     @Override

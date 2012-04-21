@@ -3,11 +3,12 @@ package ice.engine;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.opengl.GLU;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
+import android.view.Window;
 import ice.graphic.projection.PerspectiveProjection;
 import ice.node.Overlay;
 import ice.res.Res;
@@ -30,9 +31,14 @@ public abstract class Game extends Activity implements App {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
 
-        Display display = getWindowManager().getDefaultDisplay();
-        width = display.getWidth();
-        height = display.getHeight();
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        Rect rect = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rect);
+
+        width = rect.width();
+        height = rect.height();
 
         EngineContext.build(this);
         Overlay.resetId();

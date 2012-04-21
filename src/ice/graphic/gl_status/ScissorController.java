@@ -25,19 +25,14 @@ public class ScissorController implements GlStatusController {
 
     @Override
     public void attach(GL11 gl) {
-        //originalScissor = GlUtil.isEnabled(gl, GL_SCISSOR_TEST);
-        scissorChanged = width > 0 || height > 0;
-
-        if (scissorChanged) {
-            gl.glEnable(GL_SCISSOR_TEST);
-            gl.glScissor(x, y, width, height);
-        }
+        gl.glEnable(GL_SCISSOR_TEST);
+        gl.glScissor(x, y, width, height);
     }
 
     @Override
     public boolean detach(GL11 gl, Overlay overlay) {
-        if (scissorChanged)
-            gl.glDisable(GL_SCISSOR_TEST);
+        gl.glDisable(GL_SCISSOR_TEST);
+
         return true;
     }
 
@@ -47,8 +42,6 @@ public class ScissorController implements GlStatusController {
         this.width = width;
         this.height = height;
     }
-
-    private boolean scissorChanged;
 
     private int x, y, width, height;
 }

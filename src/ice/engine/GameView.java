@@ -18,7 +18,7 @@ public abstract class GameView extends GLSurfaceView implements AppView {
         super(context);
 
         setRenderer(
-                this.renderer = onCreateGlRenderer()
+                renderer = onCreateGlRenderer()
         );
     }
 
@@ -64,6 +64,5 @@ public abstract class GameView extends GLSurfaceView implements AppView {
         renderer.getOverlayRoot().onEGLContextLost();
     }
 
-    private MotionEvent touchEvent;
-    private GlRenderer renderer;
+    protected GlRenderer renderer;
 }
