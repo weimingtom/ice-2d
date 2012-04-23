@@ -9,6 +9,8 @@ import ice.node.widget.TextOverlay;
 
 import javax.microedition.khronos.opengles.GL11;
 
+import static ice.graphic.gl_status.ScissorController.Region;
+
 /**
  * User: jason
  * Date: 12-2-6
@@ -47,7 +49,14 @@ public class ComesMoreText extends TextOverlay {
 
             float height = getHeight();
 
-            controller.set((int) (absolutePos.x - getWidth() / 2), (int) (absolutePos.y - height / 2), currentScissor, (int) height);
+            Region region = new Region(
+                    (int) (absolutePos.x - getWidth() / 2),
+                    (int) (absolutePos.y - height / 2),
+                    currentScissor,
+                    (int) height
+            );
+
+            controller.set(region);
         }
         else {
             removeGlStatusController(controller);
