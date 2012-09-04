@@ -31,8 +31,6 @@ public abstract class Game extends Activity implements App {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         Rect rect = new Rect();
         Window window = getWindow();
         window.getDecorView().getWindowVisibleDisplayFrame(rect);
