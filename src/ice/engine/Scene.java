@@ -30,16 +30,4 @@ public class Scene extends OverlayParent<Overlay> {
         Log.i("Scene: " + getClass().getSimpleName(), "release");
     }
 
-    protected void onCreate() {
-    }
-
-    protected void onResume() {
-    }
-
-    protected void onPause() {
-    }
-
-    public void onStop() {
-    }
-
 }

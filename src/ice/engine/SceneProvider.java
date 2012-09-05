@@ -10,24 +10,20 @@ public abstract class SceneProvider<T extends Scene> {
 
     protected void onCreate() {
         scene = onCreateScene();
-        scene.onCreate();
         Log.i(tag, "onCreate");
     }
 
     protected abstract T onCreateScene();
 
     protected void onResume() {
-        getScene().onResume();
         Log.i(tag, "onResume");
     }
 
     protected void onPause() {
-        getScene().onPause();
         Log.i(tag, "onPause");
     }
 
     protected void onStop() {
-        getScene().onStop();
         Log.i(tag, "onStop");
     }
 
