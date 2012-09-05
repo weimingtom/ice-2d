@@ -14,6 +14,8 @@ public interface GlRes {
 
     void prepare(GL11 gl);
 
+    //void recycle(GL11 gl);
+
     void release(GL11 gl);
 
 }
