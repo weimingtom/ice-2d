@@ -1,25 +1,31 @@
 package ice.engine;
 
-import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 import ice.node.EventChannel;
 import ice.node.Overlay;
 import ice.node.OverlayRoot;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * User: ice
  * Date: 12-1-6
  * Time: 下午3:23
  */
-public abstract class GameView extends GLSurfaceView implements AppView {
+public abstract class GameView extends GLSurfaceView implements AppView, AppLifeCycleObserver {
+    protected GlRenderer renderer;
+    private List<OnSizeChangeListener> sizeChangeListeners;
 
-    public GameView(Context context) {
-        super(context);
+    public GameView(App app) {
+        super(app.getContext());
 
         setRenderer(
                 renderer = onCreateGlRenderer()
         );
+
+        sizeChangeListeners = new LinkedList<OnSizeChangeListener>();
     }
 
     protected abstract GlRenderer onCreateGlRenderer();
@@ -64,5 +70,34 @@ public abstract class GameView extends GLSurfaceView implements AppView {
         renderer.getOverlayRoot().onEGLContextLost();
     }
 
-    protected GlRenderer renderer;
+    @Override
+    public void onCreate(App app) {
+        //TODO
+    }
+
+    @Override
+    public void onResume(App app) {
+        onResume();
+    }
+
+    @Override
+    public void onPause(App app) {
+        onPause();
+    }
+
+    @Override
+    public void onDestroy(App app) {
+        //TODO
+    }
+
+    @Override
+    public void addOnSizeChangeListener(OnSizeChangeListener listener) {
+        sizeChangeListeners.add(listener);
+    }
+
+    @Override
+    public void removeOnSizeChangeListener(OnSizeChangeListener listener) {
+        sizeChangeListeners.remove(listener);
+    }
+
 }

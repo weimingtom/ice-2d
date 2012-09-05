@@ -17,14 +17,6 @@ public class EngineContext {
         return instance;
     }
 
-    public static int getAppWidth() {
-        return instance.app.getWidth();
-    }
-
-    public static int getAppHeight() {
-        return instance.app.getHeight();
-    }
-
     private EngineContext(App app) {
         this.app = app;
     }

@@ -1,6 +1,7 @@
 package ice.node;
 
 
+import android.graphics.Camera;
 import ice.animation.Animation;
 import ice.graphic.GlRes;
 import ice.graphic.gl_status.ColorController;
@@ -287,14 +288,14 @@ public abstract class Overlay implements GlRes {
                 : eventListeners.remove(listener);
     }
 
-    private volatile Animation animation;
+    public Camera camera() { //todo
+        return null;
+    }
 
     private volatile List<GlStatusControllerEvent> controllerEvents;
-
     protected List<GlStatusController> statusControllers;
-
     private List<EventListener> eventListeners;
-
+    private volatile Animation animation;
     private boolean visible;
 
     /**

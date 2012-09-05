@@ -1,7 +1,6 @@
 package ice.graphic.projection;
 
 import android.opengl.GLU;
-import ice.engine.EngineContext;
 
 import javax.microedition.khronos.opengles.GL11;
 
@@ -30,14 +29,13 @@ import static javax.microedition.khronos.opengles.GL11.GL_PROJECTION;
  * Time: 下午5:43
  */
 public class PerspectiveProjection implements Projection {
-
     public static final float DEFAULT_DEPTH = 100;
 
+    private int width, height;
 
     public PerspectiveProjection(GLU glu, float fovy) {
-        this(glu, fovy, getZFarOfWindow(fovy) * 0.5f, getZFarOfWindow(fovy) + DEFAULT_DEPTH);
+        this(glu, fovy, 0, 0);
     }
-
 
     public PerspectiveProjection(GLU glu, float fovy, float zNear, float zFar) {
         this.glu = glu;
@@ -48,6 +46,14 @@ public class PerspectiveProjection implements Projection {
 
     @Override
     public void setUp(GL11 gl, int width, int height) {
+        this.width = width;
+        this.height = height;
+
+        if (zNear == 0 && zFar == 0) {
+            zNear = getZFarOfWindow(fovy) * 0.5f;
+            zFar = getZFarOfWindow(fovy) + DEFAULT_DEPTH;
+        }
+
         gl.glViewport(0, 0, width, height);
 
         gl.glMatrixMode(GL_PROJECTION);
@@ -63,9 +69,8 @@ public class PerspectiveProjection implements Projection {
 
     }
 
-    public static float getZFarOfWindow(float fovy) {
+    public float getZFarOfWindow(float fovy) {
         double halfFovy = Math.toRadians(fovy / 2.0f);
-        int height = EngineContext.getInstance().getApp().getHeight();
 
         return (float) (height / (2 * Math.tan(halfFovy)));
     }

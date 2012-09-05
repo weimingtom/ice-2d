@@ -1,6 +1,5 @@
 package ice.graphic.gl_status;
 
-import ice.graphic.projection.PerspectiveProjection;
 import ice.node.Overlay;
 
 import javax.microedition.khronos.opengles.GL11;
@@ -19,9 +18,9 @@ import static javax.microedition.khronos.opengles.GL11.*;
  * Time: 上午11:48
  */
 public class FogController implements GlStatusController {
+    private float start, end;
 
-
-    public FogController() {
+    public FogController(float start, float end) {
         ByteBuffer bb = ByteBuffer.allocateDirect(BYTE_OF_FLOAT * 4);
         bb.order(ByteOrder.nativeOrder());
         color = bb.asFloatBuffer();
@@ -42,10 +41,6 @@ public class FogController implements GlStatusController {
         gl.glFogfv(GL_FOG_COLOR, color);
 
         gl.glFogf(GL_FOG_DENSITY, density);
-
-        float zFarOfWindow = PerspectiveProjection.getZFarOfWindow(60);
-        float start = zFarOfWindow * 0.5f;
-        float end = zFarOfWindow + 100;
 
         gl.glFogf(GL_FOG_START, start);
         gl.glFogf(GL_FOG_END, end);

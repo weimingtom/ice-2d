@@ -1,6 +1,5 @@
 package ice.node.widget;
 
-import ice.engine.EngineContext;
 import ice.model.Point3F;
 import ice.model.vertex.NormalRect;
 import ice.model.vertex.Rect;
@@ -57,10 +56,10 @@ public class Grid extends Mesh<Rect> {
     }
 
     @Override
-    public boolean hitTest(float x, float y) {
+    public boolean hitTest(float x, float y) { //todo
         Point3F absolutePos = getAbsolutePos();
         float offsetX = x - absolutePos.x;
-        float offsetY = (EngineContext.getAppHeight() - y) - absolutePos.y;
+        float offsetY = absolutePos.y;// (EngineContext.getAppHeight() - y) - absolutePos.y;
 
         float halfWidth = getWidth() / 2;
         float halfHeight = getHeight() / 2;

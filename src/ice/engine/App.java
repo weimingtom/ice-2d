@@ -1,7 +1,6 @@
 package ice.engine;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 public interface App {
 
@@ -9,17 +8,8 @@ public interface App {
 
     AppView getRender();
 
-    SharedPreferences getPreferences();
-
-    int getWidth();
-
-    int getHeight();
+    SceneProviderManager getSceneProviderManager();
 
     void exit();
 
-    void intent(Class<? extends SceneProvider> to);
-
-    void intent(Class<? extends SceneProvider> toClass, Object msg);
-
-    void back();
 }

@@ -13,14 +13,7 @@ import javax.microedition.khronos.opengles.GL11;
  * Time: 上午10:41
  */
 public class Scene extends OverlayParent<Overlay> {
-
     public Scene() {
-        this(EngineContext.getAppWidth(), EngineContext.getAppHeight());
-    }
-
-    public Scene(int width, int height) {
-        this.width = width;
-        this.height = height;
     }
 
     @Override
@@ -37,14 +30,6 @@ public class Scene extends OverlayParent<Overlay> {
         Log.i("Scene: " + getClass().getSimpleName(), "release");
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
     protected void onCreate() {
     }
 
@@ -57,5 +42,4 @@ public class Scene extends OverlayParent<Overlay> {
     public void onStop() {
     }
 
-    private int width, height;
 }

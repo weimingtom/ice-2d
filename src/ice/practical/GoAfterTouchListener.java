@@ -1,7 +1,6 @@
 package ice.practical;
 
 import android.view.MotionEvent;
-import ice.engine.EngineContext;
 import ice.node.EventChannel;
 import ice.node.EventListener;
 import ice.node.Overlay;
@@ -22,7 +21,7 @@ public class GoAfterTouchListener implements EventListener<MotionEvent> {
         if (!overlay.hitTest(x, y))
             return false;
 
-        y = EngineContext.getAppHeight() - y;
+        // y = EngineContext.getAppHeight() - y;   //todo
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:

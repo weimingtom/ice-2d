@@ -1,29 +1,11 @@
 package ice.node.widget;
 
-import android.graphics.Color;
-import ice.engine.EngineContext;
 import ice.engine.Scene;
 
 
 public abstract class ConfirmDialog extends Scene {
 
     public ConfirmDialog() {
-    }
-
-    protected ConfirmDialog(int width, int height) {
-        super(width, height);
-
-        int color = Color.argb(125, 0, 0, 0);
-
-        ColorOverlay colorOverlay = new ColorOverlay(
-                color,
-                EngineContext.getAppWidth(),
-                EngineContext.getAppHeight()
-        );
-
-        addChild(colorOverlay);
-
-
     }
 
     public ButtonOverlay getConfirmButton() {

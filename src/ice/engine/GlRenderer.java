@@ -31,30 +31,39 @@ import static javax.microedition.khronos.opengles.GL10.*;
 public class GlRenderer implements GLSurfaceView.Renderer {
     private static final String TAG = "GlRenderer";
 
+    public interface OnPreparedListener {
+        void onPrepared();
+    }
+
+    private OnPreparedListener onPreparedListener;
+    private int width, height;
+
     public GlRenderer(Projection projection) {
         this.projection = projection;
 
         overlayRoot = new OverlayRoot();
     }
 
+    public void setOnPreparedListener(OnPreparedListener listener) {
+        onPreparedListener = listener;
+    }
+
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-
         Log.w(TAG, "onSurfaceCreated");
 
         GL11 gl = (GL11) gl10;
 
         init(gl);
 
-        synchronized (this) {
-            inited = true;
-            notify();
-        }
-
+        if (onPreparedListener != null)
+            onPreparedListener.onPrepared();
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
+        this.width = width;
+        this.height = height;
         Log.w(TAG, "onSurfaceChanged");
         projection.setUp((GL11) gl10, width, height);
 
@@ -66,22 +75,20 @@ public class GlRenderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl10) {
         GL11 gl = (GL11) gl10;
 
-        reset(gl);
+        reset(gl, width, height);
 
         overlayRoot.draw(gl);
 
         checkError(gl);
     }
 
-    protected void reset(GL11 gl) {
+    protected void reset(GL11 gl, int width, int height) {
 
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity();
 
-        int width = EngineContext.getAppWidth();
-        int height = EngineContext.getAppHeight();
         float windowZ = 0;
 
         if (projection instanceof PerspectiveProjection) { //移动z到窗口
@@ -94,21 +101,6 @@ public class GlRenderer implements GLSurfaceView.Renderer {
 
     public OverlayRoot getOverlayRoot() {
         return overlayRoot;
-    }
-
-    public void waitUntilInited() {
-
-        synchronized (this) {
-            try {
-                while (!inited) {
-                    wait();
-                }
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
     private void init(GL11 gl) {
@@ -143,7 +135,7 @@ public class GlRenderer implements GLSurfaceView.Renderer {
         }
     }
 
-    private boolean inited;
     private Projection projection;
     private OverlayRoot overlayRoot;
+
 }
