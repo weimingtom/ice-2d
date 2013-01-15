@@ -16,13 +16,10 @@ import static javax.microedition.khronos.opengles.GL11.*;
 public class VertexBufferObject extends AbstractVertexData implements GlRes {
 
     VertexBufferObject() {
-        vboBuffer = new int[1];
     }
 
     public VertexBufferObject(int verticesCount, VertexAttributes attributes) {
         super(verticesCount, attributes);
-
-        vboBuffer = new int[1];
     }
 
     @Override
@@ -108,6 +105,12 @@ public class VertexBufferObject extends AbstractVertexData implements GlRes {
 
     @Override
     public void prepare(GL11 gl) {
+        if (vboBuffer != null) {
+            release(gl);
+        }
+
+        vboBuffer = new int[1];
+
         gl.glGenBuffers(vboBuffer.length, vboBuffer, 0);
         gl.glBindBuffer(GL_ARRAY_BUFFER, vboBuffer[0]);
         gl.glBufferData(GL_ARRAY_BUFFER, srcData.capacity(), srcData, GL_STATIC_DRAW);
@@ -118,10 +121,11 @@ public class VertexBufferObject extends AbstractVertexData implements GlRes {
     @Override
     public void release(GL11 gl) {
         gl.glDeleteBuffers(vboBuffer.length, vboBuffer, 0);
+        vboBuffer = null;
         prepared = false;
     }
 
-    private boolean prepared;
+    protected boolean prepared;
 
     private int[] vboBuffer;
     private Buffer subData;

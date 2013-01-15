@@ -52,6 +52,12 @@ public class Grid extends VertexBufferObject {
         setVertices(vertexes);
     }
 
+    @Override
+    public void setVertices(float[] vertices) {
+        prepared = false;
+        super.setVertices(vertices);
+    }
+
     public int getStepX() {
         return stepX;
     }
