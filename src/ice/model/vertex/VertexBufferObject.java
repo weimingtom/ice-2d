@@ -5,9 +5,6 @@ import ice.node.Overlay;
 
 import javax.microedition.khronos.opengles.GL11;
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 
 import static javax.microedition.khronos.opengles.GL11.*;
 
@@ -16,27 +13,16 @@ import static javax.microedition.khronos.opengles.GL11.*;
  * Date: 11-11-21
  * Time: 下午12:04
  */
-public class VertexBufferObject implements VertexData, GlRes {
+public class VertexBufferObject extends AbstractVertexData implements GlRes {
 
-    public VertexBufferObject(int verticesCount, VertexAttributes attributes) {
-        this.attributes = attributes;
-
-        srcData = ByteBuffer.allocateDirect(attributes.vertexSize * verticesCount);
-        srcData.order(ByteOrder.nativeOrder());
-
+    VertexBufferObject() {
         vboBuffer = new int[1];
     }
 
-    public void setVertices(float[] vertices) {
-        srcData.position(0);
-        srcData.limit(srcData.capacity());
+    public VertexBufferObject(int verticesCount, VertexAttributes attributes) {
+        super(verticesCount, attributes);
 
-        FloatBuffer floatBuffer = srcData.asFloatBuffer();
-        floatBuffer.put(vertices);
-    }
-
-    public FloatBuffer viewData() {
-        return srcData.asFloatBuffer();
+        vboBuffer = new int[1];
     }
 
     @Override
@@ -44,8 +30,7 @@ public class VertexBufferObject implements VertexData, GlRes {
 
         if (!prepared) {
             prepare(gl);
-        }
-        else {
+        } else {
 
             gl.glBindBuffer(GL_ARRAY_BUFFER, vboBuffer[0]);
 
@@ -136,14 +121,7 @@ public class VertexBufferObject implements VertexData, GlRes {
         prepared = false;
     }
 
-    private int getVerticesCount() {
-        return srcData.capacity() / attributes.vertexSize;
-    }
-
     private boolean prepared;
-
-    private ByteBuffer srcData;
-    private VertexAttributes attributes;
 
     private int[] vboBuffer;
     private Buffer subData;
