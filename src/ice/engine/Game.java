@@ -3,7 +3,6 @@ package ice.engine;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
-import android.opengl.GLU;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -105,7 +104,7 @@ public abstract class Game extends Activity implements App {
             @Override
             protected GlRenderer onCreateGlRenderer() {
 
-                PerspectiveProjection projection = new PerspectiveProjection(new GLU(), 60);
+                PerspectiveProjection projection = new PerspectiveProjection(60);
 
                 return new GlRenderer(projection);
             }

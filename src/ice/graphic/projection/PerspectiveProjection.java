@@ -31,14 +31,13 @@ import static javax.microedition.khronos.opengles.GL11.GL_PROJECTION;
 public class PerspectiveProjection implements Projection {
     public static final float DEFAULT_DEPTH = 100;
 
-    private int width, height;
+    private int height;
 
-    public PerspectiveProjection(GLU glu, float fovy) {
-        this(glu, fovy, 0, 0);
+    public PerspectiveProjection(float fovy) {
+        this(fovy, 0, 0);
     }
 
-    public PerspectiveProjection(GLU glu, float fovy, float zNear, float zFar) {
-        this.glu = glu;
+    public PerspectiveProjection(float fovy, float zNear, float zFar) {
         this.fovy = fovy;
         this.zNear = zNear;
         this.zFar = zFar;
@@ -46,7 +45,6 @@ public class PerspectiveProjection implements Projection {
 
     @Override
     public void setUp(GL11 gl, int width, int height) {
-        this.width = width;
         this.height = height;
 
         if (zNear == 0 && zFar == 0) {
@@ -59,7 +57,7 @@ public class PerspectiveProjection implements Projection {
         gl.glMatrixMode(GL_PROJECTION);
         gl.glLoadIdentity();
 
-        glu.gluPerspective(
+        GLU.gluPerspective(
                 gl,
                 fovy,
                 (float) width / (float) height,
@@ -75,13 +73,10 @@ public class PerspectiveProjection implements Projection {
         return (float) (height / (2 * Math.tan(halfFovy)));
     }
 
-
     public float getZFarOfWindow() {
         return getZFarOfWindow(fovy);
     }
 
-
-    private GLU glu;
     private float fovy;
     private float zNear, zFar;
 }

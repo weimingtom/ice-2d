@@ -10,7 +10,7 @@ import ice.res.Res;
  * Date: 11-11-30
  * Time: 下午12:31
  */
-public class BitmapOverlay extends Grid {
+public class BitmapOverlay extends RectOverlay {
 
     public BitmapOverlay(int bitmapId) {
         this(Res.getBitmap(bitmapId));

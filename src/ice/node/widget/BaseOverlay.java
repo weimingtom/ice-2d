@@ -12,17 +12,17 @@ import javax.microedition.khronos.opengles.GL11;
  * Date: 11-11-14
  * Time: 下午2:35
  */
-public class Mesh<T extends VertexData> extends Overlay {
+public class BaseOverlay<T extends VertexData> extends Overlay {
 
-    public Mesh() {
+    public BaseOverlay() {
         this(null);
     }
 
-    public Mesh(T vertexData) {
+    public BaseOverlay(T vertexData) {
         this(vertexData, null);
     }
 
-    public Mesh(T vertexData, Texture texture) {
+    public BaseOverlay(T vertexData, Texture texture) {
         this.vertexData = vertexData;
         this.texture = texture;
     }

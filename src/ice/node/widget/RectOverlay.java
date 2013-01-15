@@ -10,21 +10,21 @@ import ice.model.vertex.VboRect;
  * Date: 12-2-23
  * Time: 下午4:16
  */
-public class Grid extends Mesh<Rect> {
+public class RectOverlay extends BaseOverlay<Rect> {
 
-    public Grid(float width, float height) {
+    public RectOverlay(float width, float height) {
         this(width, height, true);
     }
 
-    public Grid(boolean vbo, float width, float height) {
+    public RectOverlay(boolean vbo, float width, float height) {
         this(width, height, vbo, true);
     }
 
-    public Grid(float width, float height, boolean ccw) {
+    public RectOverlay(float width, float height, boolean ccw) {
         this(width, height, true, ccw);
     }
 
-    public Grid(float width, float height, boolean vbo, boolean ccw) {
+    public RectOverlay(float width, float height, boolean vbo, boolean ccw) {
         if (vbo) {
             setVertexData(new VboRect(width, height, ccw));
         }

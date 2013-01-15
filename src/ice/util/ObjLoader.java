@@ -75,7 +75,7 @@ public class ObjLoader {
      *
      * @param obj   The string
      * @param flipV whether to flip the v texture coordinate or not
-     * @return The Mesh
+     * @return The BaseOverlay
      */
     public void loadObjFromString(String obj, boolean flipV) {
         String[] lines = obj.split("\n");

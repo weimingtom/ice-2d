@@ -26,14 +26,14 @@ public class Simulate3D extends OverlayParent {
 
     public Simulate3D(float width, float height, Texture texture) {
 
-        Grid gridA = new Grid(width, height);
-        gridA.setTexture(texture);
+        RectOverlay rectOverlayA = new RectOverlay(width, height);
+        rectOverlayA.setTexture(texture);
 
-        Grid gridB = new Grid(width, height);
-        gridB.setTexture(texture);
-        gridB.setRotate(90, 0, 1, 0);
+        RectOverlay rectOverlayB = new RectOverlay(width, height);
+        rectOverlayB.setTexture(texture);
+        rectOverlayB.setRotate(90, 0, 1, 0);
 
-        addChildren(gridA, gridB);
+        addChildren(rectOverlayA, rectOverlayB);
 
         addGlStatusController(new CullFaceController(CullFaceController.FaceMode.BothSide));
         addGlStatusController(new BlendController(GL_ONE, GL_ONE));

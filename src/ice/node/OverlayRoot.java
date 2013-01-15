@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Date: 12-3-5
  * Time: 下午4:33
  */
-public class OverlayRoot extends OverlayParent implements EventDispatcher<MotionEvent> {
+public class OverlayRoot extends OverlayParent<Overlay> implements EventDispatcher<MotionEvent> {
 
     private static List<GlRes> newlyRemoved;
     private static List<GlRes> newlyAdded;

@@ -36,7 +36,7 @@ public class GlRenderer implements GLSurfaceView.Renderer {
     }
 
     private int width, height;
-    private Projection projection;
+    protected Projection projection;
     private OverlayRoot overlayRoot;
     private OnPreparedListener onPreparedListener;
 
