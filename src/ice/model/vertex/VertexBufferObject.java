@@ -23,11 +23,20 @@ public class VertexBufferObject extends AbstractVertexData implements GlRes {
     }
 
     @Override
+    public void setVertices(float[] vertices) {
+        super.setVertices(vertices);
+
+        prepared = false;
+    }
+
+
+    @Override
     public void attach(GL11 gl) {
 
         if (!prepared) {
             prepare(gl);
-        } else {
+        }
+        else {
 
             gl.glBindBuffer(GL_ARRAY_BUFFER, vboBuffer[0]);
 
