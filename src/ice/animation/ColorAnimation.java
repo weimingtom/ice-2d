@@ -2,7 +2,7 @@ package ice.animation;
 
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
+import static android.opengl.GLES11.*;
 
 /**
  * 依赖 源因子GL_SRC_ALPHA实现，注意Drawable的混合因子设置
@@ -27,7 +27,7 @@ public class ColorAnimation extends Animation {
     }
 
     @Override
-    protected void onAttach(GL11 gl, float interpolatedTime) {
+    protected void onAttach(float interpolatedTime) {
 //        gl.glEnable(GL_BLEND);
 //        gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 //        //gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE);
@@ -37,14 +37,14 @@ public class ColorAnimation extends Animation {
         float b = fromColor[2] + ((toColor[2] - fromColor[2]) * interpolatedTime);
         float a = fromColor[3] + ((toColor[3] - fromColor[3]) * interpolatedTime);
 
-        gl.glColor4f(r, g, b, a);
+        glColor4f(r, g, b, a);
     }
 
     @Override
-    protected void onDetach(Overlay overlay, GL11 gl) {
+    protected void onDetach(Overlay overlay) {
         // gl.glDisable(GL_BLEND);
 
-        gl.glColor4f(1, 1, 1, 1);
+        glColor4f(1, 1, 1, 1);
     }
 
     private float[] fromColor, toColor;

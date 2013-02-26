@@ -13,7 +13,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-import static javax.microedition.khronos.opengles.GL10.*;
+import static android.opengl.GLES11.*;
 
 /**
  * EGL Context Lost
@@ -35,6 +35,7 @@ public class GlRenderer implements GLSurfaceView.Renderer {
         void onPrepared();
     }
 
+    protected boolean debug = true;
     private int width, height;
     protected Projection projection;
     private OverlayRoot overlayRoot;
@@ -56,7 +57,7 @@ public class GlRenderer implements GLSurfaceView.Renderer {
 
         GL11 gl = (GL11) gl10;
 
-        init(gl);
+        init();
 
         if (onPreparedListener != null)
             onPreparedListener.onPrepared();
@@ -64,9 +65,11 @@ public class GlRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
+        Log.w(TAG, "onSurfaceChanged width:" + width + "height:" + height);
+
         this.width = width;
         this.height = height;
-        Log.w(TAG, "onSurfaceChanged");
+
         projection.setUp((GL11) gl10, width, height);
 
         gl10.glMatrixMode(GL_MODELVIEW);
@@ -79,9 +82,11 @@ public class GlRenderer implements GLSurfaceView.Renderer {
 
         reset(gl, width, height);
 
-        overlayRoot.draw(gl);
+        overlayRoot.draw();
 
-        checkError(gl);
+        if (debug) {
+            checkError();
+        }
     }
 
     protected void reset(GL11 gl, int width, int height) {
@@ -105,30 +110,30 @@ public class GlRenderer implements GLSurfaceView.Renderer {
         return overlayRoot;
     }
 
-    private void init(GL11 gl) {
+    private void init() {
         if (!Texture.isInited()) {
-            boolean p_o_tSupported = GlUtil.queryN_P_O_TSupported(gl);
-            int maxTextureSize = GlUtil.getInteger(gl, GL_MAX_TEXTURE_SIZE);
+            boolean p_o_tSupported = GlUtil.queryN_P_O_TSupported();
+            int maxTextureSize = GlUtil.getInteger(GL_MAX_TEXTURE_SIZE);
 
             Texture.init(p_o_tSupported, maxTextureSize);
         }
 
-        gl.glClearColor(0, 0, 0, 1.0f);
+        glClearColor(0, 0, 0, 1.0f);
 
-        System.out.println("GL_RENDERER = " + gl.glGetString(GL_RENDERER));
-        System.out.println("GL_VENDOR = " + gl.glGetString(GL_VENDOR));
-        System.out.println("GL_VERSION = " + gl.glGetString(GL_VERSION));
-        System.out.println("GL_EXTENSIONS = " + gl.glGetString(GL_EXTENSIONS));
+        System.out.println("GL_RENDERER = " + glGetString(GL_RENDERER));
+        System.out.println("GL_VENDOR = " + glGetString(GL_VENDOR));
+        System.out.println("GL_VERSION = " + glGetString(GL_VERSION));
+        System.out.println("GL_EXTENSIONS = " + glGetString(GL_EXTENSIONS));
 
-        onInit(gl);
+        onInit();
     }
 
-    protected void onInit(GL11 gl) {
+    protected void onInit() {
 
     }
 
-    private void checkError(GL11 gl) {
-        int errorCode = gl.glGetError();
+    private void checkError() {
+        int errorCode = glGetError();
 
         if (errorCode != GL_NO_ERROR) {
             throw new IllegalStateException(

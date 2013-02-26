@@ -3,10 +3,9 @@ package ice.model.vertex;
 import ice.graphic.GlRes;
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.nio.Buffer;
 
-import static javax.microedition.khronos.opengles.GL11.*;
+import static android.opengl.GLES11.*;
 
 /**
  * User: ice
@@ -15,38 +14,67 @@ import static javax.microedition.khronos.opengles.GL11.*;
  */
 public class VertexBufferObject extends AbstractVertexData implements GlRes {
 
-    VertexBufferObject() {
+    public enum Usage {
+        DynamicDraw(GL_DYNAMIC_DRAW), StaticDraw(GL_STATIC_DRAW);
+
+        private int glUsage;
+
+        private Usage(int glUsage) {
+            this.glUsage = glUsage;
+        }
+
+        public int getGlUsage() {
+            return glUsage;
+        }
+    }
+
+    private Usage usage = Usage.StaticDraw;
+
+    public VertexBufferObject() {
     }
 
     public VertexBufferObject(int verticesCount, VertexAttributes attributes) {
         super(verticesCount, attributes);
     }
 
+    public void setUsage(Usage usage) {
+        this.usage = usage;
+    }
+
     @Override
-    public void setVertices(float[] vertices) {
+    public synchronized void setVertices(float[] vertices) {
         super.setVertices(vertices);
 
         prepared = false;
     }
 
-
     @Override
-    public void attach(GL11 gl) {
+    public synchronized void attach() {
 
         if (!prepared) {
-            prepare(gl);
-        }
-        else {
+            prepare();
 
-            gl.glBindBuffer(GL_ARRAY_BUFFER, vboBuffer[0]);
+            pointer();
+        } else {
+
+            glBindBuffer(GL_ARRAY_BUFFER, vboBuffer[0]);
 
             if (subData != null) {
-                gl.glBufferSubData(GL_ARRAY_BUFFER, subDataOffset, subDataSize, subData);
+                synchronized (subData) {
+                    //todo error   srcData.capacity() should be bytes
+                    glBufferSubData(GL_ARRAY_BUFFER, 0, srcData.capacity(), subData);
+
+                    pointer();
+                }
                 subData = null;
+            } else {
+                pointer();
             }
         }
 
+    }
 
+    private void pointer() {
         int textureUnit = 0;
         int numAttributes = attributes.size();
 
@@ -58,24 +86,24 @@ public class VertexBufferObject extends AbstractVertexData implements GlRes {
 
             switch (attribute.getUsage()) {
                 case Position:
-                    gl.glEnableClientState(GL_VERTEX_ARRAY);
-                    gl.glVertexPointer(dimension, GL_FLOAT, attributes.vertexSize, offset);
+                    glEnableClientState(GL_VERTEX_ARRAY);
+                    glVertexPointer(dimension, GL_FLOAT, attributes.vertexSize, offset);
                     break;
 
                 case Color:
-                    gl.glEnableClientState(GL_COLOR_ARRAY);
-                    gl.glColorPointer(dimension, GL_FLOAT, attributes.vertexSize, offset);
+                    glEnableClientState(GL_COLOR_ARRAY);
+                    glColorPointer(dimension, GL_FLOAT, attributes.vertexSize, offset);
                     break;
 
                 case Normal:
-                    gl.glEnableClientState(GL_NORMAL_ARRAY);
-                    gl.glNormalPointer(GL_FLOAT, attributes.vertexSize, offset);
+                    glEnableClientState(GL_NORMAL_ARRAY);
+                    glNormalPointer(GL_FLOAT, attributes.vertexSize, offset);
                     break;
 
                 case TextureCoordinates:
-                    gl.glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-                    gl.glClientActiveTexture(GL_TEXTURE0 + textureUnit);
-                    gl.glTexCoordPointer(dimension, GL_FLOAT, attributes.vertexSize, offset);
+                    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                    glClientActiveTexture(GL_TEXTURE0 + textureUnit);
+                    glTexCoordPointer(dimension, GL_FLOAT, attributes.vertexSize, offset);
                     textureUnit++;
                     break;
 
@@ -86,24 +114,19 @@ public class VertexBufferObject extends AbstractVertexData implements GlRes {
     }
 
     @Override
-    public void onDrawVertex(GL11 gl) {
-        gl.glDrawArrays(GL_TRIANGLES, 0, getVerticesCount());
+    public void onDrawVertex() {
+        glDrawArrays(GL_TRIANGLES, 0, getVerticesCount());
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
-        gl.glBindBuffer(GL_ARRAY_BUFFER, 0);
+    public boolean detach(Overlay overlay) {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         return true;
     }
 
-    public void postSubData(int offset, int size, Buffer subData) {
-        if (this.subData != null) {
-            System.out.println("Warning ! VBO subdata ignored !");
-            return;
-        }
-
-        this.subDataOffset = offset;
-        this.subDataSize = size;
+    public synchronized void postSubData(int offset, int size, Buffer subData) {
+//        this.subDataOffset = offset;
+//        this.subDataSize = size;
         this.subData = subData;
     }
 
@@ -113,23 +136,23 @@ public class VertexBufferObject extends AbstractVertexData implements GlRes {
     }
 
     @Override
-    public void prepare(GL11 gl) {
+    public void prepare() {
         if (vboBuffer != null) {
-            release(gl);
+            release();
         }
 
         vboBuffer = new int[1];
 
-        gl.glGenBuffers(vboBuffer.length, vboBuffer, 0);
-        gl.glBindBuffer(GL_ARRAY_BUFFER, vboBuffer[0]);
-        gl.glBufferData(GL_ARRAY_BUFFER, srcData.capacity(), srcData, GL_STATIC_DRAW);
+        glGenBuffers(vboBuffer.length, vboBuffer, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, vboBuffer[0]);
+        glBufferData(GL_ARRAY_BUFFER, srcData.capacity(), srcData, usage.glUsage);
 
         prepared = true;
     }
 
     @Override
-    public void release(GL11 gl) {
-        gl.glDeleteBuffers(vboBuffer.length, vboBuffer, 0);
+    public void release() {
+        glDeleteBuffers(vboBuffer.length, vboBuffer, 0);
         vboBuffer = null;
         prepared = false;
     }
@@ -138,5 +161,5 @@ public class VertexBufferObject extends AbstractVertexData implements GlRes {
 
     private int[] vboBuffer;
     private Buffer subData;
-    private int subDataOffset, subDataSize;
+    // private int subDataOffset, subDataSize;
 }

@@ -7,11 +7,10 @@ import ice.graphic.gl_status.GlStatusController;
 import ice.node.Overlay;
 import ice.res.Res;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.util.HashMap;
 import java.util.Map;
 
-import static javax.microedition.khronos.opengles.GL11.*;
+import static android.opengl.GLES11.*;
 
 /**
  * 在GL2.0以下版本如果硬件支持NPOT，就无需考虑纹理宽高POT的问题.
@@ -48,7 +47,7 @@ public abstract class Texture implements GlStatusController, GlRes {
     }
 
     public static boolean isNpotSupported() {
-        return npotSupported;
+        return true;
     }
 
     public static Texture requestShared(int resId, ShareStrategy strategy) {
@@ -63,8 +62,7 @@ public abstract class Texture implements GlStatusController, GlRes {
 
             if (texture != null) {
                 sharedReference.put(texture, sharedReference.get(texture) + 1);
-            }
-            else {
+            } else {
                 texture = strategy.createShared();
                 shared.put(key, texture);
                 sharedReference.put(texture, 1);
@@ -84,7 +82,7 @@ public abstract class Texture implements GlStatusController, GlRes {
     }
 
     public Texture(int id, Params params) {
-        this.buffer = new int[]{id};
+        this.nativeTexture = id;
         this.params = params;
 
         maxU = 1;
@@ -92,54 +90,54 @@ public abstract class Texture implements GlStatusController, GlRes {
     }
 
     @Override
-    public void attach(GL11 gl) {
-        gl.glEnable(GL_TEXTURE_2D);
+    public void attach() {
+        glEnable(GL_TEXTURE_2D);
 
-        if (buffer[0] == NOT_EXIST) {
-            prepare(gl);
-        }
-        else {
-            gl.glBindTexture(GL_TEXTURE_2D, buffer[0]);
+        if (!prepared) {
+            prepare();
+        } else {
+            glBindTexture(GL_TEXTURE_2D, nativeTexture);
         }
 
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
-        gl.glDisable(GL_TEXTURE_2D);
+    public boolean detach(Overlay overlay) {
+        glDisable(GL_TEXTURE_2D);
 
         return true;
     }
 
     @Override
     public void onEGLContextLost() {
-        buffer[0] = NOT_EXIST;
+        prepared = false;
     }
 
     @Override
-    public void prepare(GL11 gl) {
-        buffer = new int[1];
+    public void prepare() {
+        int[] temp = new int[1];
 
-        gl.glGenTextures(buffer.length, buffer, 0);
+        glGenTextures(1, temp, 0);
 
-        gl.glBindTexture(GL_TEXTURE_2D, buffer[0]);
+        nativeTexture = temp[0];
+
+        glBindTexture(GL_TEXTURE_2D, nativeTexture);
 
         /*
          * Always set any texture parameters before loading texture data,
          *By setting the parameters first,
          *OpenGL ES can optimize the texture data it provides to the graphics hardware to match your settings.
          */
-        bindTextureParams(gl, params);
+        bindTextureParams(params);
 
-        onLoadTextureData(gl);
+        onLoadTextureData();
+
+        prepared = true;
     }
 
     @Override
-    public void release(GL11 gl) {
-
-        if (buffer[0] == NOT_EXIST) return;
-
-        buffer[0] = NOT_EXIST;
+    public void release() {
+        if (nativeTexture == NOT_EXIST) return;
 
         if (shared.containsValue(this)) {
 
@@ -158,14 +156,16 @@ public abstract class Texture implements GlStatusController, GlRes {
             }
         }
 
-        gl.glDeleteTextures(buffer.length, buffer, 0);
+        glDeleteBuffers(1, new int[]{nativeTexture}, 0);
+
+        nativeTexture = NOT_EXIST;
     }
 
-    protected abstract void onLoadTextureData(GL11 gl);
+    protected abstract void onLoadTextureData();
 
-    private void bindTextureParams(GL11 gl, Params params) {
+    private void bindTextureParams(Params params) {
         for (Map.Entry<Integer, Integer> entry : params.getParamMap().entrySet()) {
-            gl.glTexParameterf(
+            glTexParameterf(
                     GL_TEXTURE_2D,
                     entry.getKey(),
                     entry.getValue()
@@ -186,10 +186,10 @@ public abstract class Texture implements GlStatusController, GlRes {
         return maxV;
     }
 
-    private float maxU, maxV;
-
-    private int[] buffer;
+    private int nativeTexture;
     private Params params;
+    private float maxU, maxV;
+    private boolean prepared;
 
     public static class Params {
         public static final Params LINEAR_REPEAT;

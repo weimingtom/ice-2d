@@ -1,8 +1,7 @@
 package ice.animation;
 
 import ice.node.Overlay;
-
-import javax.microedition.khronos.opengles.GL11;
+import static android.opengl.GLES11.*;
 
 public class TranslateAnimation extends Animation {
 
@@ -38,7 +37,7 @@ public class TranslateAnimation extends Animation {
     }
 
     @Override
-    protected void onAttach(GL11 gl, float interpolatedTime) {
+    protected void onAttach(float interpolatedTime) {
 
         translateX = 0;
         translateY = 0;
@@ -55,13 +54,13 @@ public class TranslateAnimation extends Animation {
             translateZ = fromZDelta + ((toZDelta - fromZDelta) * interpolatedTime);
 
         if (translateX != 0 || translateY != 0 || translateZ != 0)
-            gl.glTranslatef(translateX, translateY, translateZ);
+            glTranslatef(translateX, translateY, translateZ);
     }
 
     @Override
-    protected void onDetach(Overlay overlay, GL11 gl) {
+    protected void onDetach(Overlay overlay) {
         if (translateX != 0 || translateY != 0 || translateZ != 0)
-            gl.glTranslatef(-translateX, -translateY, -translateZ);
+            glTranslatef(-translateX, -translateY, -translateZ);
     }
 
     private float translateX, translateY, translateZ;

@@ -3,13 +3,12 @@ package ice.model.vertex;
 import ice.graphic.GlRes;
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import static ice.model.Constants.BYTE_OF_FLOAT;
-import static javax.microedition.khronos.opengles.GL11.*;
+import static ice.model.Constants.BYTES_PER_FLOAT;
+import static android.opengl.GLES11.*;
 
 /**
  * //TODO 考虑所有VboRect 使用共同的一个index对象，好处：少上传（1-4/6）的顶点数据.
@@ -28,67 +27,66 @@ public class VboRect extends Rect implements GlRes {
     }
 
     @Override
-    public void attach(GL11 gl) {
-        gl.glEnableClientState(GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    public void attach() {
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
         if (!prepared) {
-            prepare(gl);
+            prepare();
             prepared = true;
-        }
-        else {
-            gl.glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
+        } else {
+            glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
         }
 
-        int stride = (2 + 2) * BYTE_OF_FLOAT;
+        int stride = (2 + 2) * BYTES_PER_FLOAT;
 
-        gl.glVertexPointer(2, GL_FLOAT, stride, 0);
-        gl.glTexCoordPointer(2, GL_FLOAT, stride, stride / 2);
+        glVertexPointer(2, GL_FLOAT, stride, 0);
+        glTexCoordPointer(2, GL_FLOAT, stride, stride / 2);
 
         if (dataChanged && vertexBuffer != null) {
             dataChanged = false;
-            gl.glBufferSubData(GL_ARRAY_BUFFER, 0, vertexBuffer.capacity(), vertexBuffer);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertexBuffer.capacity(), vertexBuffer);
             vertexBuffer = null;
         }
     }
 
     @Override
-    public void onDrawVertex(GL11 gl) {
-        gl.glDrawArrays(mode, 0, 6);
+    public void onDrawVertex() {
+        glDrawArrays(mode, 0, 6);
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
-        gl.glBindBuffer(GL_ARRAY_BUFFER, 0);
+    public boolean detach(Overlay overlay) {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        gl.glDisableClientState(GL_VERTEX_ARRAY);
-        gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
         return true;
     }
 
     @Override
-    public void prepare(GL11 gl) {
+    public void prepare() {
         vboIds = new int[1];
-        gl.glGenBuffers(vboIds.length, vboIds, 0);
+        glGenBuffers(vboIds.length, vboIds, 0);
 
         // Upload the vertex data
         if (vertexBuffer == null)
             buildVertexData(width, height, uLeft, uRight, vTop, vBottom);
 
         vertexBuffer.position(0);
-        gl.glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
-        gl.glBufferData(GL_ARRAY_BUFFER, vertexBuffer.capacity(), vertexBuffer, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
+        glBufferData(GL_ARRAY_BUFFER, vertexBuffer.capacity(), vertexBuffer, GL_STATIC_DRAW);
 
         vertexBuffer = null;
     }
 
     @Override
-    public void release(GL11 gl) {
+    public void release() {
         prepared = false;
 
         if (vboIds != null)
-            gl.glDeleteBuffers(vboIds.length, vboIds, 0);
+            glDeleteBuffers(vboIds.length, vboIds, 0);
 
         vboIds = null;
     }
@@ -145,7 +143,7 @@ public class VboRect extends Rect implements GlRes {
             index++;
         }
 
-        ByteBuffer vbb = ByteBuffer.allocateDirect(BYTE_OF_FLOAT * sixPoints.length);
+        ByteBuffer vbb = ByteBuffer.allocateDirect(BYTES_PER_FLOAT * sixPoints.length);
         vertexBuffer = vbb.order(ByteOrder.nativeOrder());
 
         FloatBuffer floatBuffer = vertexBuffer.asFloatBuffer();

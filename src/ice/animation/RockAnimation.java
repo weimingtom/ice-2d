@@ -3,7 +3,7 @@ package ice.animation;
 import android.util.Log;
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
+import static android.opengl.GLES11.*;
 
 /**
  * User: Mike.Hu
@@ -14,12 +14,11 @@ import javax.microedition.khronos.opengles.GL11;
 public class RockAnimation extends Animation {
 
     /**
-     *
-     * @param duration           动画持续时间
-     * @param intervalTime      一次摇动中间间隔时间
-     * @param xScope             X轴摇动的幅度
-     * @param yScope             Y轴摇动的幅度
-     * @param zScope             Z轴摇动的幅度
+     * @param duration     动画持续时间
+     * @param intervalTime 一次摇动中间间隔时间
+     * @param xScope       X轴摇动的幅度
+     * @param yScope       Y轴摇动的幅度
+     * @param zScope       Z轴摇动的幅度
      */
     public RockAnimation(long duration, long intervalTime, float xScope, float yScope, float zScope) {
         super(duration);
@@ -39,20 +38,20 @@ public class RockAnimation extends Animation {
     }
 
     @Override
-    protected void onAttach(GL11 gl, float interpolatedTime) {
+    protected void onAttach(float interpolatedTime) {
         times = times * -1;
-        gl.glTranslatef(xScope * times, yScope * times, zScope * times);
+        glTranslatef(xScope * times, yScope * times, zScope * times);
 
         try {
             Thread.sleep(intervalTime);
         } catch (InterruptedException e) {
-            Log.e(getClass().getSimpleName(),getClass().getSimpleName()+" thread wrong");
+            Log.e(getClass().getSimpleName(), getClass().getSimpleName() + " thread wrong");
         }
     }
 
     @Override
-    protected void onDetach(Overlay overlay, GL11 gl) {
-        super.onDetach(overlay, gl);
+    protected void onDetach(Overlay overlay) {
+        super.onDetach(overlay);
     }
 
     private int times = 1;

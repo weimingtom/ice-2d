@@ -4,9 +4,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import ice.graphic.GlRes;
 import ice.graphic.texture.Texture;
-import ice.practical.Fps;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -54,28 +52,22 @@ public class OverlayRoot extends OverlayParent<Overlay> implements EventDispatch
         autoManaged.removeAll(reses);
     }
 
-    public OverlayRoot() {
-        fps = new Fps();
-    }
-
     @Override
-    public void draw(GL11 gl) {
+    public void draw() {
 
         buffer.clear();
         buffer.addAll(newlyAdded);
         for (GlRes res : buffer)
-            res.prepare(gl);
+            res.prepare();
 
         newlyAdded.removeAll(buffer);
 
-        super.draw(gl);
-
-        fps.draw(gl);
+        super.draw();
 
         buffer.clear();
         buffer.addAll(newlyRemoved);
         for (GlRes res : buffer)
-            res.release(gl);
+            res.release();
 
         newlyRemoved.removeAll(buffer);
     }
@@ -99,10 +91,6 @@ public class OverlayRoot extends OverlayParent<Overlay> implements EventDispatch
 
         super.onEGLContextLost();
 
-        fps.onEGLContextLost();
-
         Log.w("OverlayRoot", "onEGLContextLost");
     }
-
-    private Fps fps;
 }

@@ -2,10 +2,7 @@ package ice.graphic.texture;
 
 import ice.util.MathUtil;
 
-import javax.microedition.khronos.opengles.GL11;
-
-import static javax.microedition.khronos.opengles.GL10.GL_RGB;
-import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
+import static android.opengl.GLES11.*;
 
 /**
  * User: jason
@@ -27,8 +24,8 @@ public class FBOTexture extends Texture {
     }
 
     @Override
-    protected void onLoadTextureData(GL11 gl) {
-        gl.glCopyTexImage2D(
+    protected void onLoadTextureData() {
+        glCopyTexImage2D(
                 GL_TEXTURE_2D,
                 0,
                 GL_RGB,

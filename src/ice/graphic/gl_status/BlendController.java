@@ -3,9 +3,7 @@ package ice.graphic.gl_status;
 import ice.node.Overlay;
 import ice.util.GlUtil;
 
-import javax.microedition.khronos.opengles.GL11;
-
-import static javax.microedition.khronos.opengles.GL11.*;
+import static android.opengl.GLES11.*;
 
 /**
  * User: jason
@@ -36,30 +34,28 @@ public class BlendController implements GlStatusController {
 
 
     @Override
-    public void attach(GL11 gl) {
-        originalBlend = GlUtil.isEnabled(gl, GL_BLEND);
-        originalFactorS = GlUtil.getInteger(gl, GL_BLEND_SRC);
-        originalFactorD = GlUtil.getInteger(gl, GL_BLEND_DST);
+    public void attach() {
+        originalBlend = GlUtil.isEnabled(GL_BLEND);
+        originalFactorS = GlUtil.getInteger(GL_BLEND_SRC);
+        originalFactorD = GlUtil.getInteger(GL_BLEND_DST);
 
         if (blend) {
-            gl.glEnable(GL_BLEND);
-            gl.glBlendFunc(factorS, factorD);
-        }
-        else {
-            gl.glDisable(GL_BLEND);
+            glEnable(GL_BLEND);
+            glBlendFunc(factorS, factorD);
+        } else {
+            glDisable(GL_BLEND);
         }
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
+    public boolean detach(Overlay overlay) {
         if (originalBlend) {
-            gl.glEnable(GL_BLEND);
-        }
-        else {
-            gl.glDisable(GL_BLEND);
+            glEnable(GL_BLEND);
+        } else {
+            glDisable(GL_BLEND);
         }
 
-        gl.glBlendFunc(originalFactorS, originalFactorD);
+        glBlendFunc(originalFactorS, originalFactorD);
 
         return true;
     }

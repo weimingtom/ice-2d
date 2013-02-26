@@ -3,10 +3,9 @@ package ice.graphic.gl_status;
 import ice.node.Overlay;
 import ice.util.GlUtil;
 
-import javax.microedition.khronos.opengles.GL11;
 
-import static javax.microedition.khronos.opengles.GL10.*;
 import static javax.microedition.khronos.opengles.GL11.GL_FRONT_FACE;
+import static android.opengl.GLES11.*;
 
 /**
  * User: jason
@@ -24,27 +23,27 @@ public class CullFaceController implements GlStatusController {
     }
 
     @Override
-    public void attach(GL11 gl) {
+    public void attach() {
 
-        originalCullFace = gl.glIsEnabled(GL_CULL_FACE);
-        originalFaceMode = GlUtil.getInteger(gl, GL_FRONT_FACE);
+        originalCullFace = glIsEnabled(GL_CULL_FACE);
+        originalFaceMode = GlUtil.getInteger(GL_FRONT_FACE);
 
         switch (faceMode) {
 
             case Front:
                 if (!originalCullFace)
-                    gl.glEnable(GL_CULL_FACE);
-                gl.glFrontFace(GL_CCW);
+                    glEnable(GL_CULL_FACE);
+                glFrontFace(GL_CCW);
                 break;
 
             case Back:
                 if (!originalCullFace)
-                    gl.glEnable(GL_CULL_FACE);
-                gl.glFrontFace(GL_CW);
+                    glEnable(GL_CULL_FACE);
+                glFrontFace(GL_CW);
                 break;
 
             case BothSide:
-                gl.glDisable(GL_CULL_FACE);
+                glDisable(GL_CULL_FACE);
                 break;
         }
 
@@ -52,15 +51,14 @@ public class CullFaceController implements GlStatusController {
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
+    public boolean detach(Overlay overlay) {
         if (originalCullFace) {
-            gl.glEnable(GL_CULL_FACE);
-        }
-        else {
-            gl.glDisable(GL_CULL_FACE);
+            glEnable(GL_CULL_FACE);
+        } else {
+            glDisable(GL_CULL_FACE);
         }
 
-        gl.glFrontFace(originalFaceMode);
+        glFrontFace(originalFaceMode);
 
         return true;
     }

@@ -1,9 +1,9 @@
 package ice.graphic.gl_status;
 
-import android.opengl.GLU;
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
+import static android.opengl.GLES11.glMultMatrixf;
+import static android.opengl.Matrix.setLookAtM;
 
 /**
  * User: Jason
@@ -25,23 +25,31 @@ public class Camera implements GlStatusController {
     }
 
     @Override
-    public void attach(GL11 gl) {
-        GLU.gluLookAt(
-                gl,
+    public void attach() {
+        float[] result = new float[4 * 4];
+
+        setLookAtM(
+                result, 0,
                 eyeX, eyeY, eyeZ,
                 centerX, centerY, centerZ,
                 upX, upY, upZ
         );
+
+        glMultMatrixf(result, 0);
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
-        GLU.gluLookAt(
-                gl,
+    public boolean detach(Overlay overlay) {
+        float[] result = new float[4 * 4];
+
+        setLookAtM(
+                result, 0,
                 0, 0, 0,
                 0, 0, -1,
                 0, 1, 0
         );
+
+        glMultMatrixf(result, 0);
 
         return true;
     }

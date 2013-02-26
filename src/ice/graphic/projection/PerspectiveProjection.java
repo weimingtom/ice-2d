@@ -1,6 +1,7 @@
 package ice.graphic.projection;
 
 import android.opengl.GLU;
+import android.util.Log;
 
 import javax.microedition.khronos.opengles.GL11;
 
@@ -30,6 +31,7 @@ import static javax.microedition.khronos.opengles.GL11.GL_PROJECTION;
  */
 public class PerspectiveProjection implements Projection {
     public static final float DEFAULT_DEPTH = 100;
+    private static final String TAG = "PerspectiveProjection";
 
     private int height;
 
@@ -48,8 +50,9 @@ public class PerspectiveProjection implements Projection {
         this.height = height;
 
         if (zNear == 0 && zFar == 0) {
-            zNear = getZFarOfWindow(fovy) * 0.5f;
-            zFar = getZFarOfWindow(fovy) + DEFAULT_DEPTH;
+            float zFarOfWindow = getZFarOfWindow(fovy);
+            zFar = zFarOfWindow + DEFAULT_DEPTH;
+            zNear = zFarOfWindow * 0.7f;
         }
 
         gl.glViewport(0, 0, width, height);
@@ -65,6 +68,7 @@ public class PerspectiveProjection implements Projection {
                 zFar
         );
 
+        Log.i(TAG, "zNear :" + zNear + "zFar :" + zFar);
     }
 
     public float getZFarOfWindow(float fovy) {

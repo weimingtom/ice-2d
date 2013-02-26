@@ -3,7 +3,7 @@ package ice.animation;
 import ice.graphic.gl_status.MatrixController;
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
+import static android.opengl.GLES11.*;
 
 public class ScaleAnimation extends Animation {
 
@@ -36,7 +36,7 @@ public class ScaleAnimation extends Animation {
     }
 
     @Override
-    protected void onAttach(GL11 gl, float interpolatedTime) {
+    protected void onAttach(float interpolatedTime) {
 
         scaleX = fromX;
         scaleY = fromY;
@@ -52,13 +52,13 @@ public class ScaleAnimation extends Animation {
             scaleY = fromZ + ((toZ - fromZ) * interpolatedTime);
 
         if (scaleX != 1 || scaleY != 1 || scaleZ != 1)
-            gl.glScalef(scaleX, scaleY, scaleZ);
+            glScalef(scaleX, scaleY, scaleZ);
     }
 
     @Override
-    protected void onDetach(Overlay overlay, GL11 gl) {
+    protected void onDetach(Overlay overlay) {
         if (scaleX != 1 || scaleY != 1 || scaleZ != 1)
-            gl.glScalef(1, 1, 1);
+            glScalef(1, 1, 1);
     }
 
     private float scaleX, scaleY, scaleZ;

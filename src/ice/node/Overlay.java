@@ -9,7 +9,6 @@ import ice.graphic.gl_status.GlStatusController;
 import ice.graphic.gl_status.MatrixController;
 import ice.model.Point3F;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -56,14 +55,14 @@ public abstract class Overlay implements GlRes {
     }
 
     @Override
-    public void prepare(GL11 gl) {
+    public void prepare() {
     }
 
     @Override
-    public void release(GL11 gl) {
+    public void release() {
     }
 
-    public void draw(GL11 gl) {
+    public void draw() {
 
         if (!visible) return;
 
@@ -73,14 +72,14 @@ public abstract class Overlay implements GlRes {
 
         for (int i = 0; i < controllerSize; i++) {
             GlStatusController controller = statusControllers.get(i);
-            controller.attach(gl);
+            controller.attach();
         }
 
-        onDraw(gl);
+        onDraw();
 
         for (int i = controllerSize - 1; i >= 0; i--) {
             GlStatusController controller = statusControllers.get(i);
-            boolean effectMoreFrame = controller.detach(gl, this);
+            boolean effectMoreFrame = controller.detach(this);
             if (!effectMoreFrame) statusControllers.remove(i);
         }
 
@@ -95,20 +94,21 @@ public abstract class Overlay implements GlRes {
             for (GlStatusControllerEvent glStatusControllerEvent : copy) {
                 if (glStatusControllerEvent.add) {
                     statusControllers.add(glStatusControllerEvent.controller);
-                }
-                else {
+                } else {
                     statusControllers.remove(glStatusControllerEvent.controller);
                 }
             }
         }
     }
 
-    protected abstract void onDraw(GL11 gl);
+    protected abstract void onDraw();
 
     public void startAnimation(Animation animation) {
 
-        if (this.animation != null && !this.animation.isCompleted()) {
-            throw new IllegalStateException("Another animation not finished yet !" + this.animation);
+        if (this.animation != null) {
+            if ((!this.animation.isCanceled()) && !this.animation.isCompleted()) {
+                throw new IllegalStateException("Another animation not finished yet !" + this.animation);
+            }
         }
 
         this.animation = animation;
@@ -120,7 +120,10 @@ public abstract class Overlay implements GlRes {
     }
 
     public void cancelAnimation() {
-        animation.cancel();
+        if (animation != null) {
+            animation.cancel();
+            animation = null;
+        }
     }
 
     public void setVisible(boolean visible) {

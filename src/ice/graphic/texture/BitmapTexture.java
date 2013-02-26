@@ -5,8 +5,6 @@ import android.opengl.GLUtils;
 import android.util.Log;
 import ice.res.Res;
 
-import javax.microedition.khronos.opengles.GL11;
-
 import static ice.util.MathUtil.powerOfTwoTest;
 import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
 
@@ -40,23 +38,25 @@ public class BitmapTexture extends Texture {
     }
 
     @Override
-    public void attach(GL11 gl) {
-        super.attach(gl);
+    public void attach() {
+        super.attach();
 
         if (reload) {
             reload = false;
-            onLoadTextureData(gl);
+            onLoadTextureData();
         }
 
         if (subProvider != null) {
-            GLUtils.texSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, subProvider);
+            synchronized (this) {
+                GLUtils.texSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, subProvider);
+            }
             subProvider = null;
         }
 
     }
 
     @Override
-    protected void onLoadTextureData(GL11 gl) {
+    protected void onLoadTextureData() {
 
         if (!Texture.isNpotSupported()) {
             if (!powerOfTwoTest(bitmap.getWidth(), bitmap.getHeight())) {
@@ -79,7 +79,7 @@ public class BitmapTexture extends Texture {
         return bitmap;
     }
 
-    public void setBitmap(Bitmap bitmap) {
+    public synchronized void setBitmap(Bitmap bitmap) {
         Bitmap adjusted = Res.tryAdjustToPot(bitmap);
 
         if (this.bitmap.getWidth() != adjusted.getWidth() || this.bitmap.getHeight() != adjusted.getHeight()) {

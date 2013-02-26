@@ -6,12 +6,13 @@ package ice.model;
  * Time: 下午12:30
  */
 public class Constants {
-    /**
-     * float 字节数
-     */
-    public static final int BYTE_OF_FLOAT = 4;
+    public static final int BYTES_PER_FLOAT = Float.SIZE / Byte.SIZE;
 
-    public static final int SIZE_OF_FLOAT = Float.SIZE;
+    public static final int BYTES_PER_INT = Integer.SIZE / Byte.SIZE;
 
-    public static final int SIZE_OF_INTEGER = Integer.SIZE;
+    public static final int BYTES_PER_SHORT = Short.SIZE / Byte.SIZE;
+
+    public static final int BYTES_PER_BYTE = 1;
+    public static final int MAX_UNSIGNED_BYTE_VALUE = (int) (Math.pow(2, 8) - 1);
+    public static final int MAX_UNSIGNED_SHORT_VALUE = (int) (Math.pow(2, 16) - 1);
 }

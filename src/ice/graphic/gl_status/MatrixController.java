@@ -2,7 +2,7 @@ package ice.graphic.gl_status;
 
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
+import static android.opengl.GLES11.*;
 
 /**
  * User: jason
@@ -12,7 +12,7 @@ import javax.microedition.khronos.opengles.GL11;
 public class MatrixController implements GlStatusController {
 
     @Override
-    public void attach(GL11 gl) {
+    public void attach() {
         boolean posChanged = posX != 0 || posY != 0 || posZ != 0;
 
         boolean scaleChanged = scaleX != 1 || scaleY != 1 || scaleZ != 1;
@@ -22,24 +22,24 @@ public class MatrixController implements GlStatusController {
         matrixChange = posChanged || scaleChanged || rotateChanged;
 
         if (matrixChange) {
-            gl.glPushMatrix();
+            glPushMatrix();
 
             if (posChanged)
-                gl.glTranslatef(posX, posY, posZ);
+                glTranslatef(posX, posY, posZ);
 
             if (scaleChanged)
-                gl.glScalef(scaleX, scaleY, scaleZ);
+                glScalef(scaleX, scaleY, scaleZ);
 
             if (rotateChanged)
-                gl.glRotatef(rotate, axleX, axleY, axleZ);
+                glRotatef(rotate, axleX, axleY, axleZ);
         }
 
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
+    public boolean detach(Overlay overlay) {
         if (matrixChange)
-            gl.glPopMatrix();
+            glPopMatrix();
         return true;
     }
 

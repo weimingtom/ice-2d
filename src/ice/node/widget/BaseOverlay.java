@@ -5,8 +5,6 @@ import ice.graphic.texture.Texture;
 import ice.model.vertex.VertexData;
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
-
 /**
  * User: ice
  * Date: 11-11-14
@@ -28,21 +26,21 @@ public class BaseOverlay<T extends VertexData> extends Overlay {
     }
 
     @Override
-    protected void onDraw(GL11 gl) {
+    protected synchronized void onDraw() {
 
-        vertexData.attach(gl);
+        vertexData.attach();
 
         Texture theTexture = texture;
         boolean useTexture = (theTexture != null);
 
         if (useTexture)
-            theTexture.attach(gl);
+            theTexture.attach();
 
-        vertexData.onDrawVertex(gl);
+        vertexData.onDrawVertex();
 
-        if (useTexture) theTexture.detach(gl, this);
+        if (useTexture) theTexture.detach(this);
 
-        vertexData.detach(gl, this);
+        vertexData.detach(this);
 
     }
 
@@ -54,7 +52,7 @@ public class BaseOverlay<T extends VertexData> extends Overlay {
         this.vertexData = vertexData;
     }
 
-    public void setTexture(Texture texture) {
+    public synchronized void setTexture(Texture texture) {
         this.texture = texture;
     }
 
@@ -74,25 +72,25 @@ public class BaseOverlay<T extends VertexData> extends Overlay {
     }
 
     @Override
-    public void prepare(GL11 gl) {
-        super.prepare(gl);
+    public void prepare() {
+        super.prepare();
 
         if (texture != null)
-            texture.prepare(gl);
+            texture.prepare();
 
         if (vertexData != null && vertexData instanceof GlRes)
-            ((GlRes) vertexData).prepare(gl);
+            ((GlRes) vertexData).prepare();
     }
 
     @Override
-    public void release(GL11 gl) {
-        super.release(gl);
+    public void release() {
+        super.release();
 
         if (texture != null)
-            texture.release(gl);
+            texture.release();
 
         if (vertexData != null && vertexData instanceof GlRes)
-            ((GlRes) vertexData).release(gl);
+            ((GlRes) vertexData).release();
     }
 
     private Texture texture;

@@ -2,13 +2,14 @@ package ice.graphic;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
+import ice.model.Point3F;
 
 import javax.microedition.khronos.opengles.GL11;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import static javax.microedition.khronos.opengles.GL11.*;
+import static android.opengl.GLES11.*;
 
 public class Primitives {
 
@@ -28,6 +29,23 @@ public class Primitives {
         gl.glDrawArrays(GL_POINTS, 0, 1);
 
         gl.glDisableClientState(GL_VERTEX_ARRAY);
+    }
+
+    public static void drawPoint(Point3F point3F) {
+        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 3);
+        vbb.order(ByteOrder.nativeOrder());
+        FloatBuffer vertices = vbb.asFloatBuffer();
+
+        vertices.put(new float[]{point3F.x, point3F.y, point3F.z});
+
+        vertices.position(0);
+
+        glVertexPointer(3, GL_FLOAT, 0, vertices);
+        glEnableClientState(GL_VERTEX_ARRAY);
+
+        glDrawArrays(GL_POINTS, 0, 1);
+
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 
     public static void drawPoints(GL11 gl, PointF points[], int numberOfPoints) {
@@ -50,7 +68,7 @@ public class Primitives {
     }
 
 
-    public static void drawLine(GL11 gl, PointF origin, PointF destination) {
+    public static void drawLine(PointF origin, PointF destination) {
         ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 2);
         vbb.order(ByteOrder.nativeOrder());
         FloatBuffer vertices = vbb.asFloatBuffer();
@@ -61,12 +79,12 @@ public class Primitives {
         vertices.put(destination.y);
         vertices.position(0);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
-        gl.glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        glEnableClientState(GL_VERTEX_ARRAY);
 
-        gl.glDrawArrays(GL_LINES, 0, 2);
+        glDrawArrays(GL_LINES, 0, 2);
 
-        gl.glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 
     public static void drawRect(GL11 gl, RectF rect) {
@@ -91,18 +109,18 @@ public class Primitives {
         }
         vertices.position(0);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
-        gl.glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        glEnableClientState(GL_VERTEX_ARRAY);
 
         if (closePolygon)
-            gl.glDrawArrays(GL_LINE_LOOP, 0, numberOfPoints);
+            glDrawArrays(GL_LINE_LOOP, 0, numberOfPoints);
         else
-            gl.glDrawArrays(GL_LINE_STRIP, 0, numberOfPoints);
+            glDrawArrays(GL_LINE_STRIP, 0, numberOfPoints);
 
-        gl.glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 
-    public static void drawCircle(GL11 gl, float centerX, float centerY, float r, float a, int segments, boolean drawLineToCenter) {
+    public static void drawCircle(float centerX, float centerY, float r, float a, int segments, boolean drawLineToCenter) {
 
         ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 2));
         vbb.order(ByteOrder.nativeOrder());
@@ -128,12 +146,12 @@ public class Primitives {
 
         vertices.position(0);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
-        gl.glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        glEnableClientState(GL_VERTEX_ARRAY);
 
-        gl.glDrawArrays(GL_LINE_STRIP, 0, segments + additionalSegment);
+        glDrawArrays(GL_LINE_STRIP, 0, segments + additionalSegment);
 
-        gl.glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 
     public static void drawQuadBezier(GL11 gl, float originX, float originY, float controlX, float controlY, float destinationX, float destinationY, int segments) {

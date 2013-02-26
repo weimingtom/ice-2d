@@ -26,6 +26,8 @@ public abstract class AbstractVertexData implements VertexData {
     }
 
     public void setVertices(float[] vertices) {
+        srcData.position(0);
+
         FloatBuffer floatBuffer = srcData.asFloatBuffer();
         floatBuffer.put(vertices);
 

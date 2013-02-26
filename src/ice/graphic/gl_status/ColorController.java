@@ -2,8 +2,7 @@ package ice.graphic.gl_status;
 
 import android.graphics.Color;
 import ice.node.Overlay;
-
-import javax.microedition.khronos.opengles.GL11;
+import static android.opengl.GLES11.*;
 
 /**
  * User: jason
@@ -29,15 +28,15 @@ public class ColorController implements GlStatusController {
     }
 
     @Override
-    public void attach(GL11 gl) {
+    public void attach() {
         if (color != null)
-            gl.glColor4f(color[0], color[1], color[2], color[3]);
+            glColor4f(color[0], color[1], color[2], color[3]);
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
+    public boolean detach(Overlay overlay) {
         if (color != null)   //TODO 先这样吧
-            gl.glColor4f(1, 1, 1, 1);
+            glColor4f(1, 1, 1, 1);
 
         return true;
     }

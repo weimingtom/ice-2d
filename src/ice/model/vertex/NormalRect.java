@@ -3,13 +3,12 @@ package ice.model.vertex;
 import android.graphics.Color;
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import static ice.model.Constants.BYTE_OF_FLOAT;
-import static javax.microedition.khronos.opengles.GL10.*;
+import static ice.model.Constants.BYTES_PER_FLOAT;
+import static android.opengl.GLES11.*;
 
 /**
  * User: jason
@@ -43,46 +42,46 @@ public class NormalRect extends Rect {
     }
 
     @Override
-    public void attach(GL11 gl) {
+    public void attach() {
         vertexCoord.position(0);
-        gl.glEnableClientState(GL_VERTEX_ARRAY);
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertexCoord);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(2, GL_FLOAT, 0, vertexCoord);
 
         if (textureCoord != null) {
             textureCoord.position(0);
-            gl.glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            gl.glTexCoordPointer(2, GL_FLOAT, 0, textureCoord);
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+            glTexCoordPointer(2, GL_FLOAT, 0, textureCoord);
         }
 
         if (colorCoord != null) {
             colorCoord.position(0);
-            gl.glEnableClientState(GL_COLOR_ARRAY);
-            gl.glColorPointer(4, GL_FLOAT, 0, colorCoord);
+            glEnableClientState(GL_COLOR_ARRAY);
+            glColorPointer(4, GL_FLOAT, 0, colorCoord);
         }
     }
 
     @Override
-    public void onDrawVertex(GL11 gl) {
+    public void onDrawVertex() {
         ByteBuffer indices = ccw ? CCW_BUFFER : CW_BUFFER;
 
         indices.position(0);
-        gl.glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
-        gl.glDisableClientState(GL_VERTEX_ARRAY);
-        gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    public boolean detach(Overlay overlay) {
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
         if (colorCoord != null)
-            gl.glDisableClientState(GL_COLOR_ARRAY);
+            glDisableClientState(GL_COLOR_ARRAY);
 
         return true;
     }
 
     @Override
     protected void onSetBounds(float width, float height) {
-        ByteBuffer vbb = ByteBuffer.allocateDirect(BYTE_OF_FLOAT * 2 * 4);
+        ByteBuffer vbb = ByteBuffer.allocateDirect(BYTES_PER_FLOAT * 2 * 4);
         vbb.order(ByteOrder.nativeOrder());
         FloatBuffer coord = vbb.asFloatBuffer();
 
@@ -103,7 +102,7 @@ public class NormalRect extends Rect {
 
     @Override
     protected void onsetTextureCoord(float uLeft, float uRight, float vTop, float vBottom) {
-        ByteBuffer vbb = ByteBuffer.allocateDirect(BYTE_OF_FLOAT * 2 * 4);
+        ByteBuffer vbb = ByteBuffer.allocateDirect(BYTES_PER_FLOAT * 2 * 4);
         vbb.order(ByteOrder.nativeOrder());
         FloatBuffer coord = vbb.asFloatBuffer();
 
@@ -120,7 +119,7 @@ public class NormalRect extends Rect {
     }
 
     public void setColorCoord(int topLeft, int bottomLeft, int bottomRight, int topRight) {
-        ByteBuffer vbb = ByteBuffer.allocateDirect(BYTE_OF_FLOAT * 4 * 4);
+        ByteBuffer vbb = ByteBuffer.allocateDirect(BYTES_PER_FLOAT * 4 * 4);
         vbb.order(ByteOrder.nativeOrder());
         FloatBuffer coord = vbb.asFloatBuffer();
 

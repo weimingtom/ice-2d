@@ -2,9 +2,7 @@ package ice.graphic.gl_status;
 
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
-
-import static javax.microedition.khronos.opengles.GL10.GL_SCISSOR_TEST;
+import static android.opengl.GLES11.*;
 
 /**
  * User: jason
@@ -65,16 +63,16 @@ public class ScissorController implements GlStatusController {
     }
 
     @Override
-    public void attach(GL11 gl) {
+    public void attach() {
         Region region = this.region;
 
-        gl.glEnable(GL_SCISSOR_TEST);
-        gl.glScissor(region.x, region.y, region.width, region.height);
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(region.x, region.y, region.width, region.height);
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
-        gl.glDisable(GL_SCISSOR_TEST);
+    public boolean detach(Overlay overlay) {
+        glDisable(GL_SCISSOR_TEST);
 
         return true;
     }

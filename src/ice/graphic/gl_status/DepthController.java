@@ -3,9 +3,7 @@ package ice.graphic.gl_status;
 import ice.node.Overlay;
 import ice.util.GlUtil;
 
-import javax.microedition.khronos.opengles.GL11;
-
-import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_TEST;
+import static android.opengl.GLES11.*;
 
 /**
  * User: jason
@@ -19,32 +17,30 @@ public class DepthController implements GlStatusController {
     }
 
     @Override
-    public void attach(GL11 gl) {
+    public void attach() {
 
-        originalDepthTest = GlUtil.isEnabled(gl, GL_DEPTH_TEST);
+        originalDepthTest = GlUtil.isEnabled(GL_DEPTH_TEST);
 
         if (originalDepthTest != depthTest) {
 
             if (depthTest) {
-                gl.glEnable(GL_DEPTH_TEST);
-            }
-            else {
-                gl.glDisable(GL_DEPTH_TEST);
+                glEnable(GL_DEPTH_TEST);
+            } else {
+                glDisable(GL_DEPTH_TEST);
             }
 
         }
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
+    public boolean detach(Overlay overlay) {
 
         if (originalDepthTest != depthTest) {
 
             if (originalDepthTest) {
-                gl.glEnable(GL_DEPTH_TEST);
-            }
-            else {
-                gl.glDisable(GL_DEPTH_TEST);
+                glEnable(GL_DEPTH_TEST);
+            } else {
+                glDisable(GL_DEPTH_TEST);
             }
 
         }

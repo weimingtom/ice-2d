@@ -5,7 +5,6 @@ import ice.graphic.utils.DDSLoader;
 import ice.graphic.utils.DDSurfaceDesc2;
 import ice.res.Res;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -57,7 +56,7 @@ public class DdsTexture extends Texture {
     }
 
     @Override
-    protected void onLoadTextureData(GL11 gl) {
+    protected void onLoadTextureData() {
 
         glCompressedTexImage2D(
                 GL_TEXTURE_2D,

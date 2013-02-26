@@ -7,8 +7,6 @@ import ice.graphic.gl_status.ScissorController;
 import ice.model.Point3F;
 import ice.node.widget.TextOverlay;
 
-import javax.microedition.khronos.opengles.GL11;
-
 import static ice.graphic.gl_status.ScissorController.Region;
 
 /**
@@ -28,7 +26,7 @@ public class ComesMoreText extends TextOverlay {
     }
 
     @Override
-    protected void onDraw(GL11 gl) {
+    protected void onDraw() {
 
         long current = AnimationUtils.currentAnimationTimeMillis();
 
@@ -62,7 +60,7 @@ public class ComesMoreText extends TextOverlay {
             removeGlStatusController(controller);
         }
 
-        super.onDraw(gl);
+        super.onDraw();
     }
 
     public boolean isFinished() {

@@ -7,7 +7,6 @@ import android.opengl.GLES10;
 import android.util.Log;
 import ice.res.Res;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -76,7 +75,7 @@ public class ETC1Texture extends Texture {
     }
 
     @Override
-    protected void onLoadTextureData(GL11 gl) {
+    protected void onLoadTextureData() {
         boolean etc1Supported = ETC1Util.isETC1Supported();
         Log.w(TAG, "ETC1 texture support: " + etc1Supported);
 

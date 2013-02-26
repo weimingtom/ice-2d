@@ -1,5 +1,8 @@
 package ice.model.vertex;
 
+import android.graphics.PointF;
+
+import static ice.model.vertex.GridBuilder.buildVertexData;
 import static java.lang.String.format;
 
 /**
@@ -12,10 +15,10 @@ public class Grid extends VertexBufferObject {
     private int width, height;
 
     public Grid(int width, int height, int stepX, int stepY) {
-        this(width, height, stepX, stepY, false);
+        this(width, height, stepX, stepY, new PointF(), false);
     }
 
-    public Grid(int width, int height, int stepX, int stepY, boolean enableZ) {
+    public Grid(int width, int height, int stepX, int stepY, PointF bottomLeft, boolean enableZ) {
 
         if (width <= 0 || height <= 0 || stepX < 1 || stepY < 1) {
             throw new IllegalArgumentException(format("%d,%d,%d,%d", width, height, stepX, stepY));
@@ -26,10 +29,10 @@ public class Grid extends VertexBufferObject {
         this.stepX = stepX;
         this.stepY = stepY;
 
-        setupVertexes(enableZ);
+        setupVertexes(bottomLeft, enableZ);
     }
 
-    private void setupVertexes(boolean enableZ) {
+    private void setupVertexes(PointF bottomLeft, boolean enableZ) {
         int squareNum = stepX * stepY;
         int verticesCount = squareNum * 2 * 3;
 
@@ -47,7 +50,7 @@ public class Grid extends VertexBufferObject {
 
         init(verticesCount, new VertexAttributes(attributesArray));
 
-        float[] vertexes = GridBuilder.buildVertexData(width, height, enableZ, stepX, stepY, 1, 1);
+        float[] vertexes = buildVertexData(bottomLeft, width, height, enableZ, stepX, stepY, 1, 1);
 
         setVertices(vertexes);
     }

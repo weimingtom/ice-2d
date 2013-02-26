@@ -4,13 +4,12 @@ import android.view.animation.AnimationUtils;
 import ice.graphic.texture.Texture;
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import static ice.model.Constants.BYTE_OF_FLOAT;
-import static javax.microedition.khronos.opengles.GL11.*;
+import static ice.model.Constants.BYTES_PER_FLOAT;
+import static android.opengl.GLES11.*;
 
 /**
  * User: ice
@@ -23,11 +22,11 @@ public abstract class ParticleSystem extends Overlay {
         this.maxParticleNum = maxParticleNum;
         this.texture = texture;
 
-        ByteBuffer vfb = ByteBuffer.allocateDirect(BYTE_OF_FLOAT * 4 * (2 + 2) * maxParticleNum);
+        ByteBuffer vfb = ByteBuffer.allocateDirect(BYTES_PER_FLOAT * 4 * (2 + 2) * maxParticleNum);
         vfb.order(ByteOrder.nativeOrder());
         vertexBuffer = vfb.asFloatBuffer();
 
-        vfb = ByteBuffer.allocateDirect(BYTE_OF_FLOAT * 3 * maxParticleNum);
+        vfb = ByteBuffer.allocateDirect(BYTES_PER_FLOAT * 3 * maxParticleNum);
         vfb.order(ByteOrder.nativeOrder());
         colorBuffer = vfb.asFloatBuffer();
     }
@@ -61,36 +60,36 @@ public abstract class ParticleSystem extends Overlay {
     protected abstract void onUpdateParticles(Particle[] particles, long current);
 
     @Override
-    protected void onDraw(GL11 gl) {
+    protected void onDraw() {
         int changedSize = fillActive();
 
         if (changedSize > 0) {
-            drawActiveParticles(gl, changedSize);
+            drawActiveParticles(changedSize);
         }
 
         step();
     }
 
-    private void drawActiveParticles(GL11 gl, int changedSize) {
-        gl.glEnableClientState(GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL_COLOR_ARRAY);
+    private void drawActiveParticles(int changedSize) {
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_COLOR_ARRAY);
 
-        texture.attach(gl);
+        texture.attach();
 
         vertexBuffer.position(0);
-        gl.glVertexPointer(2, GL_FLOAT, BYTE_OF_FLOAT * (2 + 2), vertexBuffer);
+        glVertexPointer(2, GL_FLOAT, BYTES_PER_FLOAT * (2 + 2), vertexBuffer);
 
         vertexBuffer.position(2);
-        gl.glTexCoordPointer(2, GL_FLOAT, BYTE_OF_FLOAT * (2 + 2), vertexBuffer);
+        glTexCoordPointer(2, GL_FLOAT, BYTES_PER_FLOAT * (2 + 2), vertexBuffer);
 
         colorBuffer.position(0);
-        gl.glColorPointer(3, GL_FLOAT, 0, colorBuffer);
+        glColorPointer(3, GL_FLOAT, 0, colorBuffer);
 
         //gl.glDrawArrays(GL_POLYGON, 0, changedSize / (2 + 2));        //todo
 
-        gl.glDisableClientState(GL_VERTEX_ARRAY);
-        gl.glDisable(GL_TEXTURE_2D);
-        gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisable(GL_TEXTURE_2D);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
 
     private int fillActive() {

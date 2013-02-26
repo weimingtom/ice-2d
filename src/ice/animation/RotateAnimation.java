@@ -2,7 +2,7 @@ package ice.animation;
 
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
+import static android.opengl.GLES11.*;
 
 public class RotateAnimation extends Animation {
 
@@ -36,25 +36,25 @@ public class RotateAnimation extends Animation {
     }
 
     @Override
-    protected void onAttach(GL11 gl, float interpolatedTime) {
+    protected void onAttach(float interpolatedTime) {
 
         boolean offset = translateX != 0 || translateY != 0 || translateZ != 0;
 
         if (offset)
-            gl.glTranslatef(translateX, translateY, translateZ);
+            glTranslatef(translateX, translateY, translateZ);
 
         angle = fromAngle + ((toAngle - fromAngle) * interpolatedTime);
         if (angle != 0)
-            gl.glRotatef(angle, axleX, axleY, axleZ);
+            glRotatef(angle, axleX, axleY, axleZ);
 
         if (offset)
-            gl.glTranslatef(-translateX, -translateY, -translateZ);
+            glTranslatef(-translateX, -translateY, -translateZ);
     }
 
     @Override
-    protected void onDetach(Overlay overlay, GL11 gl) {
+    protected void onDetach(Overlay overlay) {
         if (angle != 0)
-            gl.glRotatef(-angle, axleX, axleY, axleZ);
+            glRotatef(-angle, axleX, axleY, axleZ);
     }
 
     private float angle;

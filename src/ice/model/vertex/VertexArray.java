@@ -2,9 +2,7 @@ package ice.model.vertex;
 
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
-
-import static javax.microedition.khronos.opengles.GL11.*;
+import static android.opengl.GLES11.*;
 
 /**
  * User: jason
@@ -12,12 +10,16 @@ import static javax.microedition.khronos.opengles.GL11.*;
  */
 public class VertexArray extends AbstractVertexData {
 
+    public VertexArray() {
+
+    }
+
     public VertexArray(int verticesCount, VertexAttributes attributes) {
         super(verticesCount, attributes);
     }
 
     @Override
-    public void attach(GL11 gl) {
+    public void attach() {
 
         for (int i = 0, size = attributes.size(); i < size; i++) {
 
@@ -27,28 +29,28 @@ public class VertexArray extends AbstractVertexData {
 
             switch (attribute.getUsage()) {
                 case Position:
-                    gl.glEnableClientState(GL_VERTEX_ARRAY);
+                    glEnableClientState(GL_VERTEX_ARRAY);
                     srcData.position(offset);
-                    gl.glVertexPointer(dimension, GL_FLOAT, attributes.vertexSize, srcData);
+                    glVertexPointer(dimension, GL_FLOAT, attributes.vertexSize, srcData);
                     break;
 
                 case Color:
-                    gl.glEnableClientState(GL_COLOR_ARRAY);
+                    glEnableClientState(GL_COLOR_ARRAY);
                     srcData.position(offset);
-                    gl.glColorPointer(dimension, GL_FLOAT, attributes.vertexSize, srcData);
+                    glColorPointer(dimension, GL_FLOAT, attributes.vertexSize, srcData);
                     break;
 
                 case Normal:
-                    gl.glEnableClientState(GL_NORMAL_ARRAY);
+                    glEnableClientState(GL_NORMAL_ARRAY);
                     srcData.position(offset);
-                    gl.glNormalPointer(GL_FLOAT, attributes.vertexSize, srcData);
+                    glNormalPointer(GL_FLOAT, attributes.vertexSize, srcData);
                     break;
 
                 case TextureCoordinates:
-                    gl.glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                     //gl.glClientActiveTexture(GL.GL_TEXTURE0 + textureUnit++);
                     srcData.position(offset);
-                    gl.glTexCoordPointer(dimension, GL_FLOAT, attributes.vertexSize, srcData);
+                    glTexCoordPointer(dimension, GL_FLOAT, attributes.vertexSize, srcData);
                     break;
             }
         }
@@ -56,14 +58,14 @@ public class VertexArray extends AbstractVertexData {
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
-        gl.glDisableClientState(GL_VERTEX_ARRAY);
+    public boolean detach(Overlay overlay) {
+        glDisableClientState(GL_VERTEX_ARRAY);
         return true;
     }
 
 
     @Override
-    public void onDrawVertex(GL11 gl) {
+    public void onDrawVertex() {
 
     }
 

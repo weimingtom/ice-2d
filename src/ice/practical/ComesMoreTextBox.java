@@ -2,8 +2,6 @@ package ice.practical;
 
 import ice.node.OverlayParent;
 
-import javax.microedition.khronos.opengles.GL11;
-
 /**
  * User: Jason
  * Date: 12-2-4
@@ -40,7 +38,7 @@ public class ComesMoreTextBox extends OverlayParent {
     }
 
     @Override
-    protected void onDraw(GL11 gl) {
+    protected void onDraw() {
 
         int size = size();
 
@@ -65,7 +63,7 @@ public class ComesMoreTextBox extends OverlayParent {
 
         }
 
-        super.onDraw(gl);
+        super.onDraw();
     }
 
     private long lineDuring;

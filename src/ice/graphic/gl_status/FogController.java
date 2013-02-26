@@ -1,14 +1,11 @@
 package ice.graphic.gl_status;
 
 import ice.node.Overlay;
+import ice.util.BufferUtil;
 
-import javax.microedition.khronos.opengles.GL11;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import static ice.model.Constants.BYTE_OF_FLOAT;
-import static javax.microedition.khronos.opengles.GL11.*;
+import static android.opengl.GLES11.*;
 
 /**
  * Fog .
@@ -21,9 +18,7 @@ public class FogController implements GlStatusController {
     private float start, end;
 
     public FogController(float start, float end) {
-        ByteBuffer bb = ByteBuffer.allocateDirect(BYTE_OF_FLOAT * 4);
-        bb.order(ByteOrder.nativeOrder());
-        color = bb.asFloatBuffer();
+        color = BufferUtil.wrap(0.8f, 0.8f, 0, 0.5f);
 
         color.put(new float[]{0.8f, 0.8f, 0, 0.5f});
         color.position(0);
@@ -32,25 +27,25 @@ public class FogController implements GlStatusController {
     }
 
     @Override
-    public void attach(GL11 gl) {
+    public void attach() {
 
-        gl.glEnable(GL_FOG);
+        glEnable(GL_FOG);
 
-        gl.glFogx(GL_FOG_MODE, GL_LINEAR); //  GL_EXP2
+        glFogx(GL_FOG_MODE, GL_LINEAR); //  GL_EXP2
 
-        gl.glFogfv(GL_FOG_COLOR, color);
+        glFogfv(GL_FOG_COLOR, color);
 
-        gl.glFogf(GL_FOG_DENSITY, density);
+        glFogf(GL_FOG_DENSITY, density);
 
-        gl.glFogf(GL_FOG_START, start);
-        gl.glFogf(GL_FOG_END, end);
+        glFogf(GL_FOG_START, start);
+        glFogf(GL_FOG_END, end);
 
-        gl.glHint(GL_FOG_HINT, GL_NICEST);
+        glHint(GL_FOG_HINT, GL_NICEST);
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
-        gl.glDisable(GL_FOG);
+    public boolean detach(Overlay overlay) {
+        glDisable(GL_FOG);
         return true;
     }
 

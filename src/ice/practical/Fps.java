@@ -3,8 +3,6 @@ package ice.practical;
 import android.graphics.Color;
 import ice.node.widget.TextOverlay;
 
-import javax.microedition.khronos.opengles.GL11;
-
 /**
  * User: jason
  * Date: 12-2-10
@@ -20,7 +18,7 @@ public class Fps extends TextOverlay {
     }
 
     @Override
-    public void draw(GL11 gl) {
+    public void draw() {
 
         fps++;
 
@@ -30,7 +28,7 @@ public class Fps extends TextOverlay {
             lastUpdate = System.currentTimeMillis();
         }
 
-        super.draw(gl);
+        super.draw();
     }
 
 

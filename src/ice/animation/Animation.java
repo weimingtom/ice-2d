@@ -6,8 +6,6 @@ import android.view.animation.Interpolator;
 import ice.graphic.gl_status.GlStatusController;
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
-
 public abstract class Animation implements GlStatusController {
 
     public static final int FOREVER = Integer.MIN_VALUE;
@@ -17,10 +15,19 @@ public abstract class Animation implements GlStatusController {
         void onAnimationEnd(Overlay overlay);
     }
 
-    public Animation(long duration) {
-        this.duration = duration;
+    public Animation() {
         interpolator = new AccelerateDecelerateInterpolator();
         startTime = NOT_STARTED;
+    }
+
+    public Animation(long duration) {
+        this();
+
+        setDuration(duration);
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     protected void start() {
@@ -33,7 +40,7 @@ public abstract class Animation implements GlStatusController {
     }
 
     @Override
-    public void attach(GL11 gl) {
+    public void attach() {
 
         if (startTime == NOT_STARTED)
             start();
@@ -49,11 +56,9 @@ public abstract class Animation implements GlStatusController {
             if (loopTimes > 0) {
                 start();
                 loopTimes--;
-            }
-            else if (loopTimes == FOREVER) {
+            } else if (loopTimes == FOREVER) {
                 start();
-            }
-            else {
+            } else {
                 finished = true;
             }
         }
@@ -62,8 +67,7 @@ public abstract class Animation implements GlStatusController {
 
         if (over) {
             normalizedTime = 1.0f;
-        }
-        else {
+        } else {
             if (duration != 0 && currentTime >= startTime + offset) {
                 normalizedTime = ((float) (currentTime - startTime - offset)) / (float) duration;
             }
@@ -72,21 +76,21 @@ public abstract class Animation implements GlStatusController {
         //根据归一化时间调整时间插值
         float interpolatedTime = interpolator.getInterpolation(normalizedTime);
 
-        onAttach(gl, interpolatedTime);
+        onAttach(interpolatedTime);
 
         attached = true;
     }
 
     @Override
-    public boolean detach(GL11 gl, Overlay overlay) {
+    public boolean detach(Overlay overlay) {
 
         if (attached) {
-            onDetach(overlay, gl);
+            onDetach(overlay);
             attached = false;
         }
 
         if (isCompleted()) {
-            onComplete(overlay, gl);
+            onComplete(overlay);
             return false;
         }
 
@@ -94,7 +98,7 @@ public abstract class Animation implements GlStatusController {
     }
 
 
-    public void onComplete(final Overlay overlay, GL11 gl) {
+    public void onComplete(final Overlay overlay) {
 
         if (fillAfter)
             applyFillAfter(overlay);
@@ -103,12 +107,13 @@ public abstract class Animation implements GlStatusController {
             listener.onAnimationEnd(overlay);
     }
 
-    protected abstract void applyFillAfter(Overlay overlay);
+    protected void applyFillAfter(Overlay overlay) {
 
-    protected void onAttach(GL11 gl, float interpolatedTime) {
     }
 
-    protected void onDetach(Overlay overlay, GL11 gl) {
+    protected abstract void onAttach(float interpolatedTime);
+
+    protected void onDetach(Overlay overlay) {
 
     }
 

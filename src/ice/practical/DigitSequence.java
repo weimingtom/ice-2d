@@ -6,8 +6,6 @@ import ice.graphic.texture.Texture;
 import ice.node.widget.AtlasSequence;
 import ice.res.Res;
 
-import javax.microedition.khronos.opengles.GL11;
-
 /**
  * User: jason
  * Date: 12-3-19
@@ -54,8 +52,8 @@ public class DigitSequence extends AtlasSequence {
     }
 
     @Override
-    protected void onDraw(GL11 gl) {
-        super.onDraw(gl);
+    protected void onDraw() {
+        super.onDraw();
 
         if (grow) {
 

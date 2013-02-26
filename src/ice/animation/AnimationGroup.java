@@ -2,7 +2,6 @@ package ice.animation;
 
 import ice.node.Overlay;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -41,19 +40,19 @@ public class AnimationGroup extends Animation {
     }
 
     @Override
-    protected void onAttach(GL11 gl, float interpolatedTime) {
+    protected void onAttach(float interpolatedTime) {
         for (Animation animation : children)
-            animation.attach(gl);
+            animation.attach();
     }
 
     @Override
-    protected void onDetach(Overlay overlay, GL11 gl) {
+    protected void onDetach(Overlay overlay) {
 
         for (Iterator<Animation> iterator = children.iterator(); iterator.hasNext(); ) {
 
             Animation animation = iterator.next();
 
-            animation.onDetach(overlay, gl);
+            animation.onDetach(overlay);
 
             if (loopTimes > 0 || loopTimes == FOREVER) {
 
@@ -61,7 +60,7 @@ public class AnimationGroup extends Animation {
             else {
                 if (animation.isCompleted()) {
                     iterator.remove();
-                    animation.onComplete(overlay, gl);
+                    animation.onComplete(overlay);
                 }
             }
 

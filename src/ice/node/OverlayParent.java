@@ -1,6 +1,5 @@
 package ice.node;
 
-import javax.microedition.khronos.opengles.GL11;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -24,26 +23,26 @@ public class OverlayParent<T extends Overlay> extends Overlay {
     }
 
     @Override
-    public void prepare(GL11 gl) {
-        super.prepare(gl);
+    public void prepare() {
+        super.prepare();
 
         for (T child : children)
-            child.prepare(gl);
+            child.prepare();
     }
 
     @Override
-    public void release(GL11 gl) {
-        super.release(gl);
+    public void release() {
+        super.release();
 
         for (T child : children)
-            child.release(gl);
+            child.release();
     }
 
     @Override
-    protected void onDraw(GL11 gl) {
+    protected void onDraw() {
 
         for (T overlay : children)
-            overlay.draw(gl);
+            overlay.draw();
 
     }
 
