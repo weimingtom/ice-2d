@@ -32,7 +32,7 @@ public class Grid extends VertexBufferObject {
         setupVertexes(bottomLeft, enableZ);
     }
 
-    private void setupVertexes(PointF bottomLeft, boolean enableZ) {
+    private void setupVertexes(PointF leftBottom, boolean enableZ) {
         int squareNum = stepX * stepY;
         int verticesCount = squareNum * 2 * 3;
 
@@ -50,7 +50,7 @@ public class Grid extends VertexBufferObject {
 
         init(verticesCount, new VertexAttributes(attributesArray));
 
-        float[] vertexes = buildVertexData(bottomLeft, width, height, enableZ, stepX, stepY, 1, 1);
+        float[] vertexes = buildVertexData(leftBottom, width, height, enableZ, stepX, stepY, 1, 1);
 
         setVertices(vertexes);
     }

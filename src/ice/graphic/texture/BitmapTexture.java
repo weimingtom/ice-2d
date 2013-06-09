@@ -38,7 +38,7 @@ public class BitmapTexture extends Texture {
     }
 
     @Override
-    public void attach() {
+    public synchronized void attach() {
         super.attach();
 
         if (reload) {
@@ -47,9 +47,7 @@ public class BitmapTexture extends Texture {
         }
 
         if (subProvider != null) {
-            synchronized (this) {
-                GLUtils.texSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, subProvider);
-            }
+            GLUtils.texSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, subProvider);
             subProvider = null;
         }
 
@@ -85,8 +83,7 @@ public class BitmapTexture extends Texture {
         if (this.bitmap.getWidth() != adjusted.getWidth() || this.bitmap.getHeight() != adjusted.getHeight()) {
             this.bitmap = adjusted;
             reload = true;
-        }
-        else {
+        } else {
             postSubData(0, 0, adjusted);
         }
 

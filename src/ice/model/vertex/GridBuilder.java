@@ -64,7 +64,7 @@ public class GridBuilder {
         return vertexData;
     }
 
-    public static float[] buildVertexData(PointF bottomLeft, float width, float height, boolean enableZ, int stepX, int stepY, float maxU, float maxV) {
+    public static float[] buildVertexData(PointF leftBottom, float width, float height, boolean enableZ, int stepX, int stepY, float maxU, float maxV) {
         int positionDimension = enableZ ? 3 : 2;
         int squareNum = stepX * stepY;
         int verticesCount = squareNum * 2 * 3;
@@ -78,8 +78,8 @@ public class GridBuilder {
                 2, 3, 0
         };
 
-        float bottomLeftX = bottomLeft.x;
-        float bottomLeftY = bottomLeft.y;
+        float left = leftBottom.x;
+        float bottom = leftBottom.y;
         float eachSquareWidth = width / stepX;
         float eachSquareHeight = height / stepY;
 
@@ -94,32 +94,32 @@ public class GridBuilder {
                 data = new float[][]{
                         {
                                 //左下角
-                                bottomLeftX + currentStepX * eachSquareWidth,
-                                bottomLeftY + currentStepY * eachSquareHeight,
+                                left + currentStepX * eachSquareWidth,
+                                bottom + currentStepY * eachSquareHeight,
                                 0,
                                 maxU * currentStepX / (float) stepX,
                                 maxV * (stepY - currentStepY) / (float) stepY
                         },
                         {
                                 //右下角
-                                bottomLeftX + (currentStepX + 1) * eachSquareWidth,
-                                bottomLeftY + currentStepY * eachSquareHeight,
+                                left + (currentStepX + 1) * eachSquareWidth,
+                                bottom + currentStepY * eachSquareHeight,
                                 0,
                                 maxU * (currentStepX + 1) / (float) stepX,
                                 maxV * (stepY - currentStepY) / (float) stepY
                         },
                         {
                                 //右上角
-                                bottomLeftX + (currentStepX + 1) * eachSquareWidth,
-                                bottomLeftY + (currentStepY + 1) * eachSquareHeight,
+                                left + (currentStepX + 1) * eachSquareWidth,
+                                bottom + (currentStepY + 1) * eachSquareHeight,
                                 0,
                                 maxU * (currentStepX + 1) / (float) stepX,
                                 maxV * (stepY - currentStepY - 1) / (float) stepY
                         },
                         {
                                 //左上角
-                                bottomLeftX + currentStepX * eachSquareWidth,
-                                bottomLeftY + (currentStepY + 1) * eachSquareHeight,
+                                left + currentStepX * eachSquareWidth,
+                                bottom + (currentStepY + 1) * eachSquareHeight,
                                 0,
                                 maxU * currentStepX / (float) stepX,
                                 maxV * (stepY - currentStepY - 1) / (float) stepY
@@ -130,29 +130,29 @@ public class GridBuilder {
                 data = new float[][]{
                         {
                                 //左下角
-                                bottomLeftX + currentStepX * eachSquareWidth,
-                                bottomLeftY + currentStepY * eachSquareHeight,
+                                left + currentStepX * eachSquareWidth,
+                                bottom + currentStepY * eachSquareHeight,
                                 maxU * currentStepX / (float) stepX,
                                 maxV * (stepY - currentStepY) / (float) stepY
                         },
                         {
                                 //右下角
-                                bottomLeftX + (currentStepX + 1) * eachSquareWidth,
-                                bottomLeftY + currentStepY * eachSquareHeight,
+                                left + (currentStepX + 1) * eachSquareWidth,
+                                bottom + currentStepY * eachSquareHeight,
                                 maxU * (currentStepX + 1) / (float) stepX,
                                 maxV * (stepY - currentStepY) / (float) stepY
                         },
                         {
                                 //右上角
-                                bottomLeftX + (currentStepX + 1) * eachSquareWidth,
-                                bottomLeftY + (currentStepY + 1) * eachSquareHeight,
+                                left + (currentStepX + 1) * eachSquareWidth,
+                                bottom + (currentStepY + 1) * eachSquareHeight,
                                 maxU * (currentStepX + 1) / (float) stepX,
                                 maxV * (stepY - currentStepY - 1) / (float) stepY
                         },
                         {
                                 //左上角
-                                bottomLeftX + currentStepX * eachSquareWidth,
-                                bottomLeftY + (currentStepY + 1) * eachSquareHeight,
+                                left + currentStepX * eachSquareWidth,
+                                bottom + (currentStepY + 1) * eachSquareHeight,
                                 maxU * currentStepX / (float) stepX,
                                 maxV * (stepY - currentStepY - 1) / (float) stepY
                         }

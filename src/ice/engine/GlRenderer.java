@@ -55,8 +55,6 @@ public class GlRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         Log.w(TAG, "onSurfaceCreated");
 
-        GL11 gl = (GL11) gl10;
-
         init();
 
         if (onPreparedListener != null)

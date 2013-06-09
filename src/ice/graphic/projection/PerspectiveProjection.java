@@ -30,7 +30,7 @@ import static javax.microedition.khronos.opengles.GL11.GL_PROJECTION;
  * Time: 下午5:43
  */
 public class PerspectiveProjection implements Projection {
-    public static final float DEFAULT_DEPTH = 100;
+    public static float DEFAULT_DEPTH = 100;
     private static final String TAG = "PerspectiveProjection";
 
     private int height;
